@@ -1,0 +1,342 @@
+.section {
+  padding: 98px 0;
+}
+
+.board {
+  position: relative;
+  min-height: 660px;
+  display: grid;
+  grid-template-columns: minmax(132px, 190px) minmax(420px, 1fr) minmax(132px, 190px);
+  gap: clamp(16px, 3vw, 34px);
+  align-items: center;
+  margin-top: 38px;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(24px, 4vw, 42px);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(143, 36, 50, 0.16), transparent 18rem),
+    radial-gradient(circle at 82% 70%, rgba(46, 111, 104, 0.17), transparent 20rem),
+    linear-gradient(90deg, rgba(255, 250, 241, 0.12) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(145deg, #ead9c4, #f8f2e9);
+  box-shadow: var(--shadow-soft);
+}
+
+.board::before {
+  position: absolute;
+  inset: 20px;
+  z-index: -1;
+  border: 1px solid rgba(33, 27, 25, 0.08);
+  border-radius: calc(var(--radius) - 2px);
+  content: "";
+}
+
+.pile {
+  position: relative;
+  min-height: 360px;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+button.pile {
+  cursor: pointer;
+}
+
+button.pile:disabled {
+  cursor: default;
+}
+
+.pile:focus-visible {
+  outline: 3px solid rgba(171, 61, 51, 0.38);
+  outline-offset: 8px;
+}
+
+.pile[data-empty="true"]::before {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 136px;
+  height: 210px;
+  border: 1px dashed rgba(103, 91, 82, 0.34);
+  border-radius: var(--radius);
+  background: rgba(255, 250, 241, 0.28);
+  transform: translate(-50%, -50%) rotate(3deg);
+  content: "";
+}
+
+.cardBack,
+.cocktailCard {
+  --i: 0;
+  position: absolute;
+  inset: 0;
+  width: min(86%, 164px);
+  height: 260px;
+  margin: auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 250, 241, 0.58);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 42px rgba(33, 27, 25, 0.2);
+  transform: translate(calc(var(--i) * 7px), calc(var(--i) * -6px)) rotate(calc(var(--i) * -2deg));
+  z-index: calc(10 - var(--i));
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
+}
+
+button.pile:not(:disabled):hover .cardBack:first-child {
+  transform: translateY(-16px) rotate(-4deg);
+  box-shadow: 0 24px 54px rgba(33, 27, 25, 0.26);
+}
+
+.cardBack {
+  display: grid;
+  place-items: center;
+  color: #fffaf1;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 250, 241, 0.14) 0 1px, transparent 1px 15px),
+    linear-gradient(150deg, var(--color-accent), var(--color-accent-2));
+}
+
+.cardBack::before,
+.cardPlaceholder::before {
+  position: absolute;
+  inset: 16px;
+  border: 1px solid rgba(255, 250, 241, 0.5);
+  border-radius: calc(var(--radius) - 2px);
+  content: "";
+}
+
+.cardBack i,
+.cardPlaceholder i {
+  width: 62px;
+  height: 54px;
+  background: #fffaf1;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: rotate(180deg);
+}
+
+.center {
+  position: relative;
+  min-height: 560px;
+  display: grid;
+  grid-template-columns: minmax(250px, 340px) minmax(260px, 1fr);
+  gap: clamp(22px, 3vw, 36px);
+  align-items: center;
+  justify-content: center;
+}
+
+.center .largeCard {
+  position: relative;
+  inset: auto;
+  width: min(100%, 330px);
+  height: auto;
+  aspect-ratio: 0.68;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 250, 241, 0.68);
+  transform: rotate(-3deg);
+  box-shadow: 0 28px 68px rgba(33, 27, 25, 0.26);
+}
+
+.center[data-motion="nextLeaving"] .largeCard {
+  animation: cardLeaveRight 330ms ease forwards;
+}
+
+.center[data-motion="nextEntering"] .largeCard {
+  animation: cardEnterLeft 350ms ease both;
+}
+
+.center[data-motion="prevLeaving"] .largeCard {
+  animation: cardLeaveLeft 330ms ease forwards;
+}
+
+.center[data-motion="prevEntering"] .largeCard {
+  animation: cardEnterRight 350ms ease both;
+}
+
+.cocktailCard img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.cardPlaceholder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-content: end;
+  gap: 20px;
+  padding: 28px;
+  color: #fffaf1;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 250, 241, 0.22), transparent 27%),
+    repeating-linear-gradient(45deg, rgba(255, 250, 241, 0.13) 0 1px, transparent 1px 17px),
+    linear-gradient(145deg, var(--color-accent), #211b19);
+}
+
+.cardPlaceholder i {
+  margin-left: auto;
+}
+
+.cardPlaceholder strong {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.8rem, 3.7vw, 3.8rem);
+  line-height: 0.95;
+}
+
+.description {
+  max-width: 420px;
+  padding: 24px 0;
+}
+
+.description h3 {
+  margin: 0 0 18px;
+  font-size: clamp(2rem, 4.3vw, 4rem);
+  line-height: 0.96;
+}
+
+.description p {
+  margin: 0 0 22px;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.description ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.description li {
+  padding: 8px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.78);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 760;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.emptyState strong {
+  max-width: 360px;
+  color: var(--color-ink);
+  font-size: 2rem;
+}
+
+@keyframes cardLeaveRight {
+  to {
+    opacity: 0.2;
+    transform: translateX(210px) rotate(10deg) scale(0.82);
+  }
+}
+
+@keyframes cardEnterLeft {
+  from {
+    opacity: 0.2;
+    transform: translateX(-190px) rotate(-12deg) scale(0.84);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+
+@keyframes cardLeaveLeft {
+  to {
+    opacity: 0.2;
+    transform: translateX(-190px) rotate(-12deg) scale(0.82);
+  }
+}
+
+@keyframes cardEnterRight {
+  from {
+    opacity: 0.2;
+    transform: translateX(210px) rotate(10deg) scale(0.84);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(-3deg) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cardBack,
+  .cocktailCard {
+    transition: none;
+  }
+
+  .center[data-motion] .largeCard {
+    animation: none;
+  }
+}
+
+@media (max-width: 1060px) {
+  .board {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .pile {
+    min-height: 190px;
+  }
+
+  .cardBack,
+  .cocktailCard {
+    width: 134px;
+    height: 196px;
+  }
+
+  .center {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .center .largeCard {
+    width: min(78vw, 330px);
+  }
+
+  .description {
+    max-width: 620px;
+    padding: 0;
+    text-align: center;
+  }
+
+  .description ul {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .board {
+    padding: 18px;
+  }
+
+  .pile {
+    min-height: 150px;
+  }
+
+  .cardBack,
+  .cocktailCard {
+    width: 112px;
+    height: 166px;
+  }
+}

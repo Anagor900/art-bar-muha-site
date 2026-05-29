@@ -1,0 +1,30 @@
+.footer {
+  padding: 28px 0;
+  border-top: 1px solid rgba(255, 250, 241, 0.12);
+  background: var(--color-ink);
+  color: #fffaf1;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.inner p,
+.inner span {
+  margin: 0;
+  color: rgba(255, 250, 241, 0.78);
+}
+
+.inner a {
+  font-weight: 760;
+}
+
+@media (max-width: 780px) {
+  .inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

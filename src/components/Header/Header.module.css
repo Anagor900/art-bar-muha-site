@@ -1,0 +1,171 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(216, 199, 178, 0.82);
+  background: rgba(244, 239, 230, 0.9);
+  backdrop-filter: blur(16px);
+}
+
+.contactBand {
+  border-bottom: 1px solid rgba(216, 199, 178, 0.72);
+}
+
+.contactInner,
+.mainRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.contactInner {
+  min-height: 34px;
+}
+
+.socials,
+.quickContacts,
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.socials a {
+  width: 28px;
+  height: 28px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.68);
+  font-size: 0.64rem;
+  font-weight: 850;
+}
+
+.disabled {
+  color: rgba(103, 91, 82, 0.48);
+  pointer-events: none;
+}
+
+.quickContacts {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 760;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.quickContacts a {
+  color: var(--color-ink);
+}
+
+.mainRow {
+  min-height: 60px;
+}
+
+.brand {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.brand span:last-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.mark {
+  width: 31px;
+  height: 26px;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: rotate(180deg);
+}
+
+.navigation {
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.navigation a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 850;
+}
+
+.navigation a:hover {
+  color: var(--color-accent);
+}
+
+.menuButton {
+  display: none;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  gap: 5px;
+  padding: 10px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+
+.menuButton span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--color-ink);
+}
+
+@media (max-width: 1040px) {
+  .mainRow {
+    flex-wrap: wrap;
+  }
+
+  .menuButton {
+    display: grid;
+  }
+
+  .navigation {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 0 14px;
+    background: rgba(244, 239, 230, 0.96);
+  }
+
+  .navigation[data-open="true"] {
+    display: flex;
+  }
+
+  .navigation a {
+    border-top: 1px solid var(--color-line);
+  }
+}
+
+@media (max-width: 720px) {
+  .contactInner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 0;
+  }
+
+  .quickContacts {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .brand span:last-child {
+    max-width: 210px;
+    white-space: normal;
+  }
+}

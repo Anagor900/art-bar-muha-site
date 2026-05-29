@@ -1,0 +1,24 @@
+{
+  "pages": [
+    {
+      "id": "menu-01",
+      "title": "Страница меню 1",
+      "image": "menu-01.jpg"
+    },
+    {
+      "id": "menu-02",
+      "title": "Страница меню 2",
+      "image": "menu-02.jpg"
+    },
+    {
+      "id": "menu-03",
+      "title": "Страница меню 3",
+      "image": "menu-03.jpg"
+    },
+    {
+      "id": "menu-04",
+      "title": "Страница меню 4",
+      "image": "menu-04.jpg"
+    }
+  ]
+}

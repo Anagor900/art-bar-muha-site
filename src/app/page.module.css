@@ -1,0 +1,77 @@
+.about {
+  padding: 94px 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+  gap: 54px;
+  align-items: center;
+}
+
+.aboutText {
+  display: grid;
+  gap: 18px;
+  max-width: 760px;
+  margin-top: 28px;
+}
+
+.aboutText p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.aboutVisual {
+  position: relative;
+  min-height: 480px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(90deg, rgba(46, 111, 104, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(180deg, var(--color-surface), var(--color-surface-2));
+  box-shadow: var(--shadow-soft);
+}
+
+.aboutVisual span {
+  position: absolute;
+  border: 1px solid rgba(33, 27, 25, 0.2);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(143, 36, 50, 0.84), rgba(46, 111, 104, 0.72)),
+    repeating-linear-gradient(45deg, rgba(255, 250, 241, 0.18) 0 1px, transparent 1px 16px);
+}
+
+.aboutVisual span:nth-child(1) {
+  inset: 46px 70px 210px 42px;
+}
+
+.aboutVisual span:nth-child(2) {
+  inset: 180px 42px 70px 124px;
+  background:
+    linear-gradient(135deg, rgba(109, 79, 130, 0.82), rgba(174, 125, 61, 0.72)),
+    repeating-linear-gradient(90deg, rgba(255, 250, 241, 0.2) 0 1px, transparent 1px 18px);
+}
+
+.aboutVisual span:nth-child(3) {
+  inset: auto auto 54px 54px;
+  width: 112px;
+  height: 96px;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: rotate(180deg);
+  background: var(--color-accent);
+}
+
+@media (max-width: 900px) {
+  .aboutGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .aboutVisual {
+    min-height: 380px;
+  }
+}

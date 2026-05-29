@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Сварог-Фильм-Отель у Мариинского театра",
+    "href": "https://svarog-film-hotel-test.homestack.ru/",
+    "tone": "cinema",
+    "description": "Отель у Мариинского театра"
+  },
+  {
+    "title": "Арт-Ресто-Бар «МУХА» у Летнего сада",
+    "href": "#top",
+    "tone": "muha",
+    "description": "Ресторан, бар, музыка и выставки на Пестеля"
+  }
+]

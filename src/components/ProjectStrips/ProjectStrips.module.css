@@ -1,0 +1,184 @@
+.section {
+  padding: 6px 0 76px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.strip {
+  --mx: 0px;
+  --my: 0px;
+  position: relative;
+  min-width: 0;
+  min-height: 128px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 18px;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding: 22px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.strip::before,
+.strip::after {
+  position: absolute;
+  inset: -22px;
+  z-index: -1;
+  pointer-events: none;
+  transition: transform 420ms ease;
+  content: "";
+}
+
+.strip::before {
+  background:
+    linear-gradient(115deg, rgba(255, 250, 241, 0.92), rgba(255, 250, 241, 0.64)),
+    repeating-linear-gradient(135deg, rgba(143, 36, 50, 0.1) 0 1px, transparent 1px 18px),
+    linear-gradient(135deg, rgba(143, 36, 50, 0.16), rgba(46, 111, 104, 0.12));
+  animation: projectBackgroundFloat 16s ease-in-out infinite alternate;
+  transform: translate(var(--mx), var(--my));
+}
+
+.strip::after {
+  opacity: 0.7;
+  background:
+    radial-gradient(circle at 78% 24%, rgba(174, 125, 61, 0.24), transparent 16rem),
+    linear-gradient(90deg, transparent 0 48%, rgba(33, 27, 25, 0.08) 48% 52%, transparent 52%),
+    linear-gradient(0deg, transparent 0 54%, rgba(33, 27, 25, 0.07) 54% 58%, transparent 58%);
+  animation: projectLightFloat 19s ease-in-out infinite alternate;
+  transform: translate(calc(var(--mx) * -0.65), calc(var(--my) * -0.65));
+}
+
+.strip:nth-child(2)::before {
+  animation-delay: -4s;
+}
+
+.strip:nth-child(2)::after {
+  animation-delay: -7s;
+}
+
+.strip[data-tone="cinema"]::before {
+  background:
+    linear-gradient(115deg, rgba(255, 250, 241, 0.92), rgba(255, 250, 241, 0.68)),
+    repeating-linear-gradient(90deg, rgba(33, 27, 25, 0.1) 0 2px, transparent 2px 16px),
+    linear-gradient(135deg, rgba(33, 27, 25, 0.13), rgba(174, 125, 61, 0.13));
+}
+
+.strip[data-tone="cinema"]::after {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(33, 27, 25, 0.12), transparent 12rem),
+    repeating-linear-gradient(0deg, transparent 0 18px, rgba(33, 27, 25, 0.06) 18px 21px);
+}
+
+.strip:hover {
+  border-color: rgba(143, 36, 50, 0.34);
+  box-shadow: 0 18px 48px rgba(33, 27, 25, 0.11);
+}
+
+.strip span,
+.strip strong,
+.strip p {
+  position: relative;
+  z-index: 1;
+}
+
+.strip span {
+  grid-row: span 2;
+  width: 48px;
+  height: 42px;
+  border: 1px solid currentColor;
+  clip-path: polygon(50% 100%, 0 0, 100% 0);
+  transform: rotate(180deg);
+}
+
+.strip strong {
+  min-width: 0;
+  font-size: 1.1rem;
+  overflow-wrap: anywhere;
+}
+
+.strip p {
+  min-width: 0;
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+@keyframes projectBackgroundFloat {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      0 0,
+      22px -14px,
+      12px 10px;
+  }
+}
+
+@keyframes projectLightFloat {
+  from {
+    background-position:
+      0 0,
+      0 0,
+      0 0;
+  }
+
+  to {
+    background-position:
+      18px -12px,
+      -10px 0,
+      0 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .strip::before,
+  .strip::after {
+    animation: none;
+    transition: none;
+  }
+
+  .strip::before,
+  .strip::after {
+    transform: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .strip {
+    grid-template-columns: 42px minmax(0, 1fr);
+  }
+
+  .strip span {
+    width: 42px;
+    height: 36px;
+  }
+
+  .strip strong {
+    font-size: 0.98rem;
+  }
+
+  .strip p {
+    font-size: 0.94rem;
+  }
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "cocktail-01",
+    "title": "Коктейль 1",
+    "image": "cocktail-01.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  },
+  {
+    "id": "cocktail-02",
+    "title": "Коктейль 2",
+    "image": "cocktail-02.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  },
+  {
+    "id": "cocktail-03",
+    "title": "Коктейль 3",
+    "image": "cocktail-03.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  },
+  {
+    "id": "cocktail-04",
+    "title": "Коктейль 4",
+    "image": "cocktail-04.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  },
+  {
+    "id": "cocktail-05",
+    "title": "Коктейль 5",
+    "image": "cocktail-05.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  },
+  {
+    "id": "cocktail-06",
+    "title": "Коктейль 6",
+    "image": "cocktail-06.jpg",
+    "description": "Описание коктейля будет добавлено позже.",
+    "notes": ["карта бара"]
+  }
+]
