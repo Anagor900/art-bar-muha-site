@@ -1,6 +1,19 @@
+/* eslint-disable @next/next/no-img-element */
+
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import contacts from "../../../content/contacts.json";
 import styles from "./ContactsSection.module.css";
+
+const socialLinks = [
+  {
+    id: "email",
+    ariaLabel: "Написать на почту",
+    href: contacts.email.href,
+    enabled: true,
+    icon: contacts.email.icon,
+  },
+  ...contacts.socials,
+];
 
 export function ContactsSection() {
   return (
@@ -11,7 +24,7 @@ export function ContactsSection() {
             eyebrow="Контакты"
             id="contacts-title"
             title="Столики, банкеты, музыка и выставки"
-            description="Для связи доступны телефон, почта, VK и будущие социальные каналы."
+            description="Для связи доступны телефон, почта и социальные ссылки."
           />
           <div className={styles.list}>
             <div className={styles.phoneItem}>
@@ -38,16 +51,20 @@ export function ContactsSection() {
             </p>
           </div>
           <div className={styles.quick}>
-            <a href={contacts.phones[0].href}>Позвонить</a>
-            <a href={contacts.email.href}>Написать на почту</a>
-            {contacts.socials.map((social) => (
+            <a className={styles.textAction} href={contacts.phones[0].href}>
+              Позвонить
+            </a>
+            {socialLinks.map((social) => (
               <a
                 aria-disabled={!social.enabled}
-                className={!social.enabled ? styles.disabled : undefined}
+                aria-label={social.ariaLabel}
+                className={`${styles.iconLink} ${!social.enabled ? styles.disabled : ""}`}
                 href={social.href}
                 key={social.id}
+                tabIndex={!social.enabled ? -1 : undefined}
+                title={social.ariaLabel}
               >
-                {social.label}
+                <img alt="" aria-hidden="true" src={social.icon} />
               </a>
             ))}
           </div>

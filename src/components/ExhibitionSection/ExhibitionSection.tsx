@@ -4,19 +4,21 @@
 
 import { useEffect, useState } from "react";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
+import type { ExhibitionContent, ExhibitionPainting } from "@/lib/exhibition";
 import contacts from "../../../content/contacts.json";
-import exhibition from "../../../content/gallery.json";
 import styles from "./ExhibitionSection.module.css";
 
-type Painting = (typeof exhibition.items)[number];
+type ExhibitionSectionProps = {
+  exhibition: ExhibitionContent;
+};
 
-export function ExhibitionSection() {
+export function ExhibitionSection({ exhibition }: ExhibitionSectionProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [loaded, setLoaded] = useState<Record<string, boolean>>({});
   const active = exhibition.items[activeIndex];
 
   useEffect(() => {
-    if (!active || loaded[active.id]) {
+    if (!active?.imageSrc || loaded[active.id] !== undefined) {
       return;
     }
 
@@ -33,7 +35,7 @@ export function ExhibitionSection() {
         setLoaded((state) => ({ ...state, [active.id]: false }));
       }
     };
-    image.src = `/gallery/${active.image}`;
+    image.src = active.imageSrc;
 
     return () => {
       mounted = false;
@@ -92,15 +94,11 @@ export function ExhibitionSection() {
             <dl>
               <div>
                 <dt>Автор</dt>
-                <dd>{active.author}</dd>
+                <dd>{active.artist}</dd>
               </div>
               <div>
                 <dt>Техника</dt>
                 <dd>{active.technique}</dd>
-              </div>
-              <div>
-                <dt>Материалы</dt>
-                <dd>{active.materials}</dd>
               </div>
             </dl>
             <p>{active.description}</p>
@@ -113,11 +111,13 @@ export function ExhibitionSection() {
   );
 }
 
-function PaintingFrame({ painting, loaded }: { painting: Painting; loaded?: boolean }) {
+function PaintingFrame({ painting, loaded }: { painting: ExhibitionPainting; loaded?: boolean }) {
+  const shouldShowImage = Boolean(painting.imageSrc && loaded);
+
   return (
     <div className={styles.frame}>
-      {loaded ? (
-        <img alt={painting.title} src={`/gallery/${painting.image}`} />
+      {shouldShowImage ? (
+        <img alt={painting.title} src={painting.imageSrc ?? ""} />
       ) : (
         <div className={styles.paintingPlaceholder} aria-label={painting.title}>
           <span />

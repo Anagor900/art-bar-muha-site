@@ -5,7 +5,12 @@ import { fileURLToPath } from "node:url";
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cardsDir = path.join(rootDir, "public", "bar-cards");
 const outFile = path.join(rootDir, "src", "generated", "bar-card-manifest.json");
-const imageExtensions = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".svg"]);
+const imageExtensions = new Set([".webp", ".jpg", ".jpeg", ".png", ".avif"]);
+const collator = new Intl.Collator("ru", { numeric: true, sensitivity: "base" });
+
+function sortByName(a, b) {
+  return collator.compare(a, b);
+}
 
 async function readOptionalDirectory(dir) {
   try {
@@ -15,25 +20,42 @@ async function readOptionalDirectory(dir) {
   }
 }
 
-const manifest = {};
-const cardFolders = await readOptionalDirectory(cardsDir);
+const manifest = {
+  cardBack: null,
+  cards: {},
+};
+const cardEntries = (await readOptionalDirectory(cardsDir)).sort((a, b) => sortByName(a.name, b.name));
 
-for (const entry of cardFolders) {
-  if (entry.isFile() && imageExtensions.has(path.extname(entry.name).toLowerCase())) {
-    const id = path.basename(entry.name, path.extname(entry.name));
-    manifest[id] = [`/bar-cards/${entry.name}`];
+for (const entry of cardEntries) {
+  const extension = path.extname(entry.name).toLowerCase();
+  const id = path.basename(entry.name, extension);
+
+  if (entry.isFile() && imageExtensions.has(extension)) {
+    if (id === "back") {
+      manifest.cardBack = `/bar-cards/${entry.name}`;
+      continue;
+    }
+
+    if (id.startsWith("cocktail-")) {
+      manifest.cards[id] = [`/bar-cards/${entry.name}`];
+    }
+
     continue;
   }
 
-  if (!entry.isDirectory()) {
+  if (!entry.isDirectory() || entry.name === "back") {
     continue;
   }
 
   const files = await readdir(path.join(cardsDir, entry.name));
-  manifest[entry.name] = files
+  const images = files
     .filter((fileName) => imageExtensions.has(path.extname(fileName).toLowerCase()))
-    .sort((a, b) => a.localeCompare(b, "ru"))
+    .sort(sortByName)
     .map((fileName) => `/bar-cards/${entry.name}/${fileName}`);
+
+  if (images.length > 0) {
+    manifest.cards[entry.name] = images;
+  }
 }
 
 await mkdir(path.dirname(outFile), { recursive: true });

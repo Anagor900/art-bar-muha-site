@@ -3,65 +3,16 @@
   top: 0;
   z-index: 100;
   border-bottom: 1px solid rgba(216, 199, 178, 0.82);
-  background: rgba(244, 239, 230, 0.9);
+  background: rgba(244, 239, 230, 0.93);
   backdrop-filter: blur(16px);
 }
 
-.contactBand {
-  border-bottom: 1px solid rgba(216, 199, 178, 0.72);
-}
-
-.contactInner,
-.mainRow {
-  display: flex;
+.inner {
+  min-height: var(--header-height);
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content max-content;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-.contactInner {
-  min-height: 34px;
-}
-
-.socials,
-.quickContacts,
-.navigation {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.socials a {
-  width: 28px;
-  height: 28px;
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid var(--color-line);
-  border-radius: 999px;
-  background: rgba(255, 250, 241, 0.68);
-  font-size: 0.64rem;
-  font-weight: 850;
-}
-
-.disabled {
-  color: rgba(103, 91, 82, 0.48);
-  pointer-events: none;
-}
-
-.quickContacts {
-  color: var(--color-muted);
-  font-size: 0.78rem;
-  font-weight: 760;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.quickContacts a {
-  color: var(--color-ink);
-}
-
-.mainRow {
-  min-height: 60px;
+  gap: 18px;
 }
 
 .brand {
@@ -78,31 +29,86 @@
   overflow-wrap: anywhere;
 }
 
-.mark {
-  width: 31px;
-  height: 26px;
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
-  clip-path: polygon(50% 100%, 0 0, 100% 0);
-  transform: rotate(180deg);
+.logo {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: contain;
+}
+
+.navigation,
+.socials,
+.phones,
+.headerContacts,
+.mobileContacts {
+  display: flex;
+  align-items: center;
 }
 
 .navigation {
-  justify-content: flex-end;
-  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
 }
 
 .navigation a {
   min-height: 34px;
   display: inline-flex;
   align-items: center;
-  padding: 0 8px;
+  padding: 0 7px;
   color: var(--color-muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 850;
+  white-space: nowrap;
 }
 
-.navigation a:hover {
+.navigation a:hover,
+.phones a:hover {
   color: var(--color-accent);
+}
+
+.headerContacts {
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.socials {
+  gap: 6px;
+}
+
+.socials a {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.72);
+}
+
+.socials img {
+  width: 16px;
+  height: 16px;
+  display: block;
+  object-fit: contain;
+}
+
+.disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.phones {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.phones a {
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  font-weight: 820;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .menuButton {
@@ -124,48 +130,67 @@
   background: var(--color-ink);
 }
 
-@media (max-width: 1040px) {
-  .mainRow {
-    flex-wrap: wrap;
+.mobilePanel {
+  display: none;
+}
+
+@media (max-width: 1160px) {
+  .inner {
+    grid-template-columns: max-content 1fr max-content;
+  }
+
+  .navigation,
+  .headerContacts {
+    display: none;
   }
 
   .menuButton {
     display: grid;
+    justify-self: end;
   }
 
-  .navigation {
-    display: none;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0 0 14px;
-    background: rgba(244, 239, 230, 0.96);
+  .mobilePanel[data-open="true"] {
+    display: grid;
+    gap: 14px;
+    padding-bottom: 16px;
   }
 
-  .navigation[data-open="true"] {
-    display: flex;
-  }
-
-  .navigation a {
+  .mobilePanel nav {
+    display: grid;
+    gap: 2px;
     border-top: 1px solid var(--color-line);
+  }
+
+  .mobilePanel nav a {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-line);
+    color: var(--color-muted);
+    font-size: 0.82rem;
+    font-weight: 850;
+  }
+
+  .mobileContacts {
+    justify-content: space-between;
+    gap: 14px;
   }
 }
 
-@media (max-width: 720px) {
-  .contactInner {
+@media (max-width: 640px) {
+  .brand span:last-child {
+    max-width: min(58vw, 250px);
+    white-space: normal;
+    line-height: 1.08;
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobileContacts {
     align-items: flex-start;
     flex-direction: column;
-    gap: 6px;
-    padding: 8px 0;
-  }
-
-  .quickContacts {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .brand span:last-child {
-    max-width: 210px;
-    white-space: normal;
   }
 }

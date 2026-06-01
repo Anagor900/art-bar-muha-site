@@ -1,1 +1,74 @@
-{}
+{
+  "cardBack": "/bar-cards/back.webp",
+  "cards": {
+    "cocktail-01": [
+      "/bar-cards/cocktail-01.webp"
+    ],
+    "cocktail-02": [
+      "/bar-cards/cocktail-02.webp"
+    ],
+    "cocktail-03": [
+      "/bar-cards/cocktail-03.webp"
+    ],
+    "cocktail-04": [
+      "/bar-cards/cocktail-04.webp"
+    ],
+    "cocktail-05": [
+      "/bar-cards/cocktail-05.webp"
+    ],
+    "cocktail-06": [
+      "/bar-cards/cocktail-06.webp"
+    ],
+    "cocktail-07": [
+      "/bar-cards/cocktail-07.webp"
+    ],
+    "cocktail-08": [
+      "/bar-cards/cocktail-08.webp"
+    ],
+    "cocktail-09": [
+      "/bar-cards/cocktail-09.webp"
+    ],
+    "cocktail-10": [
+      "/bar-cards/cocktail-10.webp"
+    ],
+    "cocktail-11": [
+      "/bar-cards/cocktail-11.webp"
+    ],
+    "cocktail-12": [
+      "/bar-cards/cocktail-12.webp"
+    ],
+    "cocktail-13": [
+      "/bar-cards/cocktail-13.webp"
+    ],
+    "cocktail-14": [
+      "/bar-cards/cocktail-14.webp"
+    ],
+    "cocktail-15": [
+      "/bar-cards/cocktail-15.webp"
+    ],
+    "cocktail-16": [
+      "/bar-cards/cocktail-16.webp"
+    ],
+    "cocktail-17": [
+      "/bar-cards/cocktail-17.webp"
+    ],
+    "cocktail-18": [
+      "/bar-cards/cocktail-18.webp"
+    ],
+    "cocktail-19": [
+      "/bar-cards/cocktail-19.webp"
+    ],
+    "cocktail-20": [
+      "/bar-cards/cocktail-20.webp"
+    ],
+    "cocktail-21": [
+      "/bar-cards/cocktail-21.webp"
+    ],
+    "cocktail-22": [
+      "/bar-cards/cocktail-22.webp"
+    ],
+    "cocktail-23": [
+      "/bar-cards/cocktail-23.webp"
+    ]
+  }
+}

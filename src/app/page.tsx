@@ -10,6 +10,7 @@ import { MenuSection } from "@/components/MenuSection/MenuSection";
 import { ProjectStrips } from "@/components/ProjectStrips/ProjectStrips";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import { ServicesSection } from "@/components/ServicesSection/ServicesSection";
+import { getExhibitionContent } from "@/lib/exhibition";
 import { getTextSections } from "@/lib/textSections";
 import barCards from "../../content/bar-cards.json";
 import contacts from "../../content/contacts.json";
@@ -23,6 +24,8 @@ const jsonLd = {
   "@type": "Restaurant",
   name: meta.siteName,
   url: meta.siteUrl,
+  logo: `${meta.siteUrl}${meta.logoImage}`,
+  image: `${meta.siteUrl}${meta.logoImage}`,
   email: contacts.email.label,
   telephone: contacts.phones.map((phone) => phone.label),
   address: {
@@ -37,6 +40,7 @@ const jsonLd = {
 
 export default function Home() {
   const texts = getTextSections();
+  const exhibition = getExhibitionContent();
 
   return (
     <>
@@ -68,8 +72,9 @@ export default function Home() {
         </section>
         <MenuSection pages={menu.pages} text={texts.menu[0]} />
         <BarCardDeck cards={barCards} manifest={barCardManifest} intro={texts.bar[0]} />
+        <div id="afisha-gallery" data-anchor-target aria-hidden="true" />
         <AfishaSection />
-        <ExhibitionSection />
+        <ExhibitionSection exhibition={exhibition} />
         <ServicesSection />
         <ContactsSection />
         <JsonLd data={jsonLd} />

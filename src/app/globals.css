@@ -12,7 +12,9 @@
   --shadow-soft: 0 24px 72px rgba(33, 27, 25, 0.15);
   --container: 1180px;
   --radius: 8px;
-  --header-height: 96px;
+  --header-height: 66px;
+  --header-safe-gap: 24px;
+  --header-offset: 90px;
 }
 
 * {
@@ -23,7 +25,7 @@ html {
   max-width: 100%;
   overflow-x: clip;
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header-height) + 24px);
+  scroll-padding-top: var(--header-offset);
 }
 
 body {
@@ -61,8 +63,9 @@ main {
   overflow: clip;
 }
 
-section[id] {
-  scroll-margin-top: calc(var(--header-height) + 24px);
+section[id],
+[data-anchor-target] {
+  scroll-margin-top: var(--header-offset);
 }
 
 .container {
@@ -89,21 +92,18 @@ section[id] {
 
 @media (max-width: 860px) {
   :root {
-    --header-height: 118px;
+    --header-height: 62px;
+    --header-safe-gap: 18px;
+    --header-offset: 80px;
   }
 
   html {
-    scroll-padding-top: calc(var(--header-height) + 18px);
+    scroll-padding-top: var(--header-offset);
   }
 
-  section[id] {
-    scroll-margin-top: calc(var(--header-height) + 18px);
-  }
-}
-
-@media (max-width: 720px) {
-  :root {
-    --header-height: 142px;
+  section[id],
+  [data-anchor-target] {
+    scroll-margin-top: var(--header-offset);
   }
 }
 

@@ -11,23 +11,37 @@ export type BarCard = {
   id: string;
   title: string;
   image: string;
+  subtitle?: string;
   description: string;
   notes: string[];
+  accent?: string;
 };
 
 type BarCardDeckProps = {
   cards: BarCard[];
-  manifest: Record<string, string[]>;
+  manifest: BarCardManifest;
   intro: string;
 };
 
 type MotionState = "idle" | "nextLeaving" | "nextEntering" | "prevLeaving" | "prevEntering";
+type BarCardManifest = {
+  cardBack?: string | null;
+  cards?: Record<string, string[]>;
+};
 
 const animationMs = 680;
 const swapMs = 330;
 
-function imageUrl(card: BarCard, manifest: Record<string, string[]>) {
-  return manifest[card.id]?.[0] ?? `/bar-cards/${card.image}`;
+function cardImages(manifest: BarCardManifest) {
+  return manifest.cards ?? {};
+}
+
+function imageUrl(card: BarCard, manifest: BarCardManifest) {
+  return cardImages(manifest)[card.id]?.[0] ?? (card.image ? `/bar-cards/${card.image}` : "");
+}
+
+function cardBackUrl(manifest: BarCardManifest) {
+  return manifest.cardBack ?? "";
 }
 
 export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
@@ -36,17 +50,41 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
   const [rightPile, setRightPile] = useState<string[]>([]);
   const [activeId, setActiveId] = useState(cards[0]?.id ?? "");
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [cardBackReady, setCardBackReady] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const [motion, setMotion] = useState<MotionState>("idle");
   const timers = useRef<number[]>([]);
   const activeCard = activeId ? cardMap.get(activeId) : undefined;
+  const backSrc = cardBackUrl(manifest);
 
   useEffect(() => {
     let mounted = true;
 
+    if (backSrc) {
+      const backImage = new Image();
+      backImage.onload = () => {
+        if (mounted) {
+          setCardBackReady(true);
+        }
+      };
+      backImage.onerror = () => {
+        if (mounted) {
+          setCardBackReady(false);
+        }
+      };
+      backImage.src = backSrc;
+    } else {
+      setCardBackReady(false);
+    }
+
     cards.forEach((card) => {
       const image = new Image();
       const src = imageUrl(card, manifest);
+
+      if (!src) {
+        setLoadedImages((state) => ({ ...state, [card.id]: false }));
+        return;
+      }
 
       image.onload = () => {
         if (mounted) {
@@ -64,7 +102,7 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
     return () => {
       mounted = false;
     };
-  }, [cards, manifest]);
+  }, [backSrc, cards, manifest]);
 
   useEffect(() => {
     const queuedTimers = timers.current;
@@ -141,6 +179,8 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
             ariaLabel="Открыть следующую карточку коктейля"
             cards={leftPile}
             cardMap={cardMap}
+            cardBackReady={cardBackReady}
+            cardBackSrc={backSrc}
             disabled={leftPile.length === 0 || isMoving}
             isBack
             loadedImages={loadedImages}
@@ -176,6 +216,8 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
             ariaLabel="Вернуть предыдущую карточку коктейля"
             cards={rightPile}
             cardMap={cardMap}
+            cardBackReady={cardBackReady}
+            cardBackSrc={backSrc}
             disabled={rightPile.length === 0 || isMoving}
             loadedImages={loadedImages}
             manifest={manifest}
@@ -191,6 +233,8 @@ function CardPile({
   ariaLabel,
   cards,
   cardMap,
+  cardBackReady,
+  cardBackSrc,
   disabled,
   isBack = false,
   loadedImages,
@@ -200,10 +244,12 @@ function CardPile({
   ariaLabel: string;
   cards: string[];
   cardMap: Map<string, BarCard>;
+  cardBackReady: boolean;
+  cardBackSrc: string;
   disabled: boolean;
   isBack?: boolean;
   loadedImages: Record<string, boolean>;
-  manifest: Record<string, string[]>;
+  manifest: BarCardManifest;
   onClick?: () => void;
 }) {
   const content = cards.slice(0, 5).map((cardId, index) => {
@@ -214,14 +260,7 @@ function CardPile({
     }
 
     return isBack ? (
-      <span
-        aria-hidden="true"
-        className={styles.cardBack}
-        key={card.id}
-        style={{ "--i": index } as CSSProperties}
-      >
-        <i />
-      </span>
+      <CardBack imageReady={cardBackReady} imageSrc={cardBackSrc} key={card.id} stackIndex={index} />
     ) : (
       <CocktailCard
         card={card}
@@ -252,6 +291,29 @@ function CardPile({
     >
       {content}
     </button>
+  );
+}
+
+function CardBack({
+  imageReady,
+  imageSrc,
+  stackIndex,
+}: {
+  imageReady: boolean;
+  imageSrc: string;
+  stackIndex: number;
+}) {
+  const hasImage = Boolean(imageReady && imageSrc);
+
+  return (
+    <span
+      aria-hidden="true"
+      className={styles.cardBack}
+      data-has-image={hasImage}
+      style={{ "--i": stackIndex } as CSSProperties}
+    >
+      {hasImage ? <img alt="" src={imageSrc} /> : <i />}
+    </span>
   );
 }
 

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "bar-card:import": "python scripts/import-bar-cards-from-pdf.py",
     "bar-card:manifest": "node scripts/generate-bar-card-manifest.mjs",
     "prebuild": "node scripts/generate-bar-card-manifest.mjs",
     "build": "next build",
