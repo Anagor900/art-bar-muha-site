@@ -18,27 +18,71 @@
 }
 
 .carousel {
-  display: grid;
-  grid-template-rows: 1fr auto;
+  position: relative;
   overflow: hidden;
+  background: transparent;
   box-shadow: var(--shadow-soft);
 }
 
 .frame {
-  min-height: 560px;
+  position: relative;
+  min-height: 590px;
+  height: clamp(520px, 58vw, 680px);
   display: grid;
   place-items: center;
-  padding: 34px;
-  background:
-    linear-gradient(90deg, rgba(46, 111, 104, 0.16) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+  overflow: hidden;
+  background: transparent;
+  touch-action: pan-y;
 }
 
-.frame img {
+.imageButton {
   width: 100%;
   height: 100%;
-  max-height: 620px;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.imageButton:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: -6px;
+}
+
+.imageButton img {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
   object-fit: contain;
+}
+
+.frame[data-orientation="portrait"] .imageButton img {
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+}
+
+.frame[data-orientation="landscape"] .imageButton img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+}
+
+.frame[data-orientation="square"] .imageButton img,
+.frame[data-orientation="unknown"] .imageButton img {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .paintingPlaceholder {
@@ -70,98 +114,110 @@
   font-size: 1.6rem;
 }
 
-.controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 18px;
-  border-top: 1px solid var(--color-line);
-}
-
-.controls button {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--color-line);
+.frameButton {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 250, 241, 0.72);
   border-radius: 999px;
-  background: var(--color-page);
+  background: rgba(255, 250, 241, 0.7);
+  color: var(--color-ink);
   font-weight: 900;
+  transform: translateY(-50%);
+  box-shadow: 0 14px 34px rgba(33, 27, 25, 0.14);
+  backdrop-filter: blur(8px);
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
 }
 
-.dots {
-  display: flex;
-  gap: 8px;
+.frameButton:hover {
+  background: rgba(255, 250, 241, 0.9);
+  transform: translateY(-50%) scale(1.04);
 }
 
-.dots button {
-  width: 12px;
-  height: 12px;
-  padding: 0;
-  border-color: var(--color-line);
+.previousButton {
+  left: 18px;
 }
 
-.dots button[aria-pressed="true"] {
-  border-color: var(--color-accent);
-  background: var(--color-accent);
+.nextButton {
+  right: 18px;
 }
 
 .details {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
+  gap: 28px;
   padding: 30px;
 }
 
-.details > span {
-  color: var(--color-accent);
-  font-weight: 850;
-}
-
-.details h3 {
-  margin: 14px 0 24px;
-  font-size: clamp(2.1rem, 4.5vw, 4.2rem);
-  line-height: 0.96;
-}
-
-.details dl {
+.detailsContent {
   display: grid;
-  gap: 10px;
-  margin: 0 0 22px;
+  align-content: start;
+  gap: 14px;
 }
 
-.details dl div {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--color-line);
-}
-
-.details dt {
-  color: var(--color-muted);
-  font-size: 0.86rem;
-}
-
-.details dd {
+.paintingTitle {
+  max-width: 620px;
   margin: 0;
-  font-weight: 740;
+  font-size: clamp(2.2rem, 3.8vw, 3.85rem);
+  line-height: 1;
 }
 
-.details p {
-  margin: 0 0 18px;
+.artist {
+  margin: 0;
+  color: rgba(33, 27, 25, 0.84);
+  font-size: clamp(1.35rem, 2vw, 2rem);
+  font-weight: 780;
+  line-height: 1.12;
+}
+
+.technique {
+  margin: 2px 0 0;
+  color: rgba(103, 91, 82, 0.92);
+  font-size: clamp(1rem, 1.2vw, 1.12rem);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.description {
+  margin: 6px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-line);
   color: var(--color-muted);
   line-height: 1.7;
 }
 
+.contactBlock {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  margin-top: auto;
+  text-align: center;
+}
+
 .delivery {
+  width: 100%;
+  margin: 0;
   padding: 16px;
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
   background: var(--color-surface);
+  color: var(--color-muted);
+  line-height: 1.62;
+}
+
+.delivery span {
+  display: block;
 }
 
 .details a {
-  width: fit-content;
+  width: min(100%, 320px);
   min-height: 44px;
   display: inline-flex;
   align-items: center;
@@ -174,6 +230,154 @@
   font-weight: 780;
 }
 
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 24px;
+  background: rgba(16, 13, 12, 0.9);
+}
+
+.lightboxPanel {
+  position: relative;
+  width: min(100%, 1280px);
+  height: min(100%, 860px);
+  max-height: calc(100vh - 48px);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid rgba(255, 250, 241, 0.24);
+  border-radius: var(--radius);
+  background: rgba(33, 27, 25, 0.78);
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.42);
+  color: #fffaf1;
+  overflow: hidden;
+}
+
+.lightboxTopbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.lightboxTitle {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.lightboxTitle span {
+  color: rgba(255, 250, 241, 0.72);
+  font-weight: 800;
+}
+
+.lightboxTitle strong {
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  line-height: 1.08;
+}
+
+.lightboxTitle em {
+  color: rgba(255, 250, 241, 0.78);
+  font-style: normal;
+}
+
+.lightboxTools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.lightboxTools button,
+.lightboxArrow {
+  min-width: 42px;
+  height: 42px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 250, 241, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.12);
+  color: #fffaf1;
+  font-weight: 850;
+  backdrop-filter: blur(8px);
+}
+
+.lightboxTools button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.lightboxClose {
+  font-size: 1.35rem;
+}
+
+.lightboxViewport {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: calc(var(--radius) - 2px);
+  background: rgba(0, 0, 0, 0.18);
+  overscroll-behavior: contain;
+  touch-action: none;
+  user-select: none;
+}
+
+.lightboxImage {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.34);
+  pointer-events: none;
+  transform-origin: center center;
+  transition: transform 120ms ease;
+  user-select: none;
+  will-change: transform;
+}
+
+.lightboxImage[data-zoomed="true"] {
+  cursor: zoom-out;
+}
+
+.lightboxViewport[data-can-pan="true"] {
+  cursor: grab;
+}
+
+.lightboxViewport[data-panning="true"] {
+  cursor: grabbing;
+}
+
+.lightboxViewport[data-panning="true"] .lightboxImage {
+  transition: none;
+}
+
+.lightboxArrow {
+  position: absolute;
+  top: 54%;
+  z-index: 2;
+  width: 54px;
+  height: 64px;
+  transform: translateY(-50%);
+}
+
+.lightboxPrevious {
+  left: 28px;
+}
+
+.lightboxNext {
+  right: 28px;
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
@@ -181,10 +385,63 @@
 
   .frame {
     min-height: 430px;
+    height: min(122vw, 560px);
   }
 
-  .details dl div {
-    grid-template-columns: 1fr;
-    gap: 4px;
+  .frameButton {
+    width: 44px;
+    height: 58px;
+  }
+
+  .previousButton {
+    left: 10px;
+  }
+
+  .nextButton {
+    right: 10px;
+  }
+
+  .details {
+    min-height: 430px;
+  }
+
+  .paintingTitle {
+    font-size: clamp(2rem, 10vw, 3.15rem);
+  }
+
+  .artist {
+    font-size: clamp(1.2rem, 6vw, 1.8rem);
+  }
+
+  .lightbox {
+    padding: 10px;
+  }
+
+  .lightboxPanel {
+    height: calc(100vh - 20px);
+    max-height: none;
+    padding: 12px;
+  }
+
+  .lightboxTopbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .lightboxTools {
+    justify-content: flex-start;
+  }
+
+  .lightboxArrow {
+    width: 46px;
+    height: 56px;
+  }
+
+  .lightboxPrevious {
+    left: 16px;
+  }
+
+  .lightboxNext {
+    right: 16px;
   }
 }

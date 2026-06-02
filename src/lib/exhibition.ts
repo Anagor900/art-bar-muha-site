@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import gallery from "../../content/gallery.json";
 
+export type PaintingOrientation = "landscape" | "portrait" | "square" | "unknown";
+
 export type ExhibitionPainting = {
   id: string;
   title: string;
@@ -9,6 +11,7 @@ export type ExhibitionPainting = {
   technique: string;
   description: string;
   imageSrc: string | null;
+  orientation: PaintingOrientation;
   contactLabel: string;
 };
 
@@ -23,6 +26,24 @@ const GALLERY_PATH = path.join(process.cwd(), "public", "gallery");
 const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif"]);
 const CONTACT_LABEL = "Связаться для приобретения";
 
+type GalleryFile = {
+  id: string;
+  name: string;
+  src: string;
+  orientation: PaintingOrientation;
+};
+
+type ParsedPainting = {
+  id: string;
+  title: string;
+  artist: string;
+  technique: string;
+  description: string;
+  imageSrc: string | null;
+  orientation: PaintingOrientation;
+  contactLabel: string;
+};
+
 const fallbackItems: ExhibitionPainting[] = [1, 2, 3, 4].map((index) => ({
   id: `painting-fallback-${index}`,
   title: `Картина ${index}`,
@@ -30,6 +51,7 @@ const fallbackItems: ExhibitionPainting[] = [1, 2, 3, 4].map((index) => ({
   technique: "Живопись, смешанная техника",
   description: "Работа из текущей экспозиции арт-ресто-бара «МУХА».",
   imageSrc: null,
+  orientation: "portrait",
   contactLabel: CONTACT_LABEL,
 }));
 
@@ -53,45 +75,50 @@ function readPaintingsFromTxt(): ExhibitionPainting[] {
   }
 
   const galleryFiles = getGalleryFiles();
-
-  return content
+  const parsed = content
     .split(/\r?\n/)
     .map((line, index) => parseLine(line, index + 1, galleryFiles))
-    .filter((painting): painting is ExhibitionPainting => Boolean(painting));
+    .filter((painting): painting is ParsedPainting => Boolean(painting));
+
+  const seen = new Set(parsed.map((painting) => normalizeImageName(painting.id)));
+  const imagesWithoutRows = galleryFiles
+    .filter((file) => !seen.has(normalizeImageName(file.id)))
+    .map((file) => makePaintingFromGalleryFile(file));
+
+  return [...parsed, ...imagesWithoutRows];
 }
 
-function parseLine(line: string, lineNumber: number, galleryFiles: string[]): ExhibitionPainting | null {
+function parseLine(line: string, lineNumber: number, galleryFiles: GalleryFile[]): ParsedPainting | null {
   const trimmed = line.trim();
 
   if (!trimmed || trimmed.startsWith("#")) {
     return null;
   }
 
-  const match = /^(.+?)\s*\{\s*(.+?)\s*\}\s*$/.exec(trimmed);
+  const match = /^(.+?)\s*\{\s*(.*?)\s*\}\s*$/.exec(trimmed);
 
   if (!match) {
     warnBadLine(lineNumber, "не удалось разобрать строку");
     return null;
   }
 
-  const title = match[1].trim();
+  const id = match[1].trim();
   const fields = parseFields(match[2]);
-  const artist = fields["художник"];
-  const technique = fields["техника"];
-  const description = fields["описание_картины"];
+  const image = findImageForId(id, galleryFiles);
 
-  if (!title || !artist || !technique || !description) {
-    warnBadLine(lineNumber, "не заполнены обязательные поля");
+  if (!id) {
+    warnBadLine(lineNumber, "не указан идентификатор изображения");
     return null;
   }
 
   return {
-    id: makePaintingId(title, lineNumber),
-    title,
-    artist,
-    technique,
-    description,
-    imageSrc: findImageForTitle(title, galleryFiles),
+    id,
+    title: cleanEndingPunctuation(fields["название"] ?? ""),
+    artist: cleanEndingPunctuation(fields["автор"] ?? fields["художник"] ?? ""),
+    technique: fields["техника"] ?? "",
+    description: fields["описание"] ?? fields["описание_картины"] ?? "",
+    imageSrc: image?.src ?? null,
+    orientation: image?.orientation ?? "unknown",
     contactLabel: CONTACT_LABEL,
   };
 }
@@ -109,21 +136,44 @@ function parseFields(body: string): Record<string, string> {
   }, {});
 }
 
-function getGalleryFiles(): string[] {
+function getGalleryFiles(): GalleryFile[] {
   try {
     return fs
       .readdirSync(GALLERY_PATH)
-      .filter((file) => IMAGE_EXTENSIONS.has(path.extname(file).toLowerCase()));
+      .filter((file) => IMAGE_EXTENSIONS.has(path.extname(file).toLowerCase()))
+      .map((file) => {
+        const fullPath = path.join(GALLERY_PATH, file);
+
+        return {
+          id: path.parse(file).name,
+          name: file,
+          src: `/gallery/${encodeURIComponent(file)}`,
+          orientation: getImageOrientation(fullPath),
+        };
+      });
   } catch {
     return [];
   }
 }
 
-function findImageForTitle(title: string, files: string[]): string | null {
-  const normalizedTitle = normalizeImageName(title);
-  const match = files.find((file) => normalizeImageName(path.parse(file).name) === normalizedTitle);
+function findImageForId(id: string, files: GalleryFile[]): GalleryFile | null {
+  const normalizedId = normalizeImageName(id);
+  const match = files.find((file) => normalizeImageName(file.id) === normalizedId);
 
-  return match ? `/gallery/${encodeURIComponent(match)}` : null;
+  return match ?? null;
+}
+
+function makePaintingFromGalleryFile(file: GalleryFile): ExhibitionPainting {
+  return {
+    id: file.id,
+    title: "",
+    artist: "",
+    technique: "",
+    description: "",
+    imageSrc: file.src,
+    orientation: file.orientation,
+    contactLabel: CONTACT_LABEL,
+  };
 }
 
 function normalizeImageName(value: string): string {
@@ -135,15 +185,69 @@ function normalizeImageName(value: string): string {
     .replace(/\s+/g, " ");
 }
 
-function makePaintingId(title: string, lineNumber: number): string {
-  const base = title
-    .normalize("NFKC")
-    .trim()
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, "-")
-    .replace(/^-+|-+$/g, "");
+function cleanEndingPunctuation(value: string): string {
+  return value.trim().replace(/[\s.,:;!?…]+$/u, "");
+}
 
-  return `${base || "painting"}-${lineNumber}`;
+function getImageOrientation(filePath: string): PaintingOrientation {
+  const dimensions = getImageDimensions(filePath);
+
+  if (!dimensions) {
+    return "unknown";
+  }
+
+  if (dimensions.width === dimensions.height) {
+    return "square";
+  }
+
+  return dimensions.width > dimensions.height ? "landscape" : "portrait";
+}
+
+function getImageDimensions(filePath: string): { width: number; height: number } | null {
+  const buffer = fs.readFileSync(filePath);
+  const ext = path.extname(filePath).toLowerCase();
+
+  if (ext === ".png" && buffer.length >= 24) {
+    return {
+      width: buffer.readUInt32BE(16),
+      height: buffer.readUInt32BE(20),
+    };
+  }
+
+  if ((ext === ".jpg" || ext === ".jpeg") && buffer.length >= 4) {
+    return getJpegDimensions(buffer);
+  }
+
+  return null;
+}
+
+function getJpegDimensions(buffer: Buffer): { width: number; height: number } | null {
+  let offset = 2;
+
+  while (offset < buffer.length) {
+    if (buffer[offset] !== 0xff) {
+      return null;
+    }
+
+    const marker = buffer[offset + 1];
+    const length = buffer.readUInt16BE(offset + 2);
+    const isStartOfFrame =
+      (marker >= 0xc0 && marker <= 0xc3) ||
+      (marker >= 0xc5 && marker <= 0xc7) ||
+      (marker >= 0xc9 && marker <= 0xcb) ||
+      (marker >= 0xcd && marker <= 0xcf);
+
+    if (isStartOfFrame) {
+      return {
+        height: buffer.readUInt16BE(offset + 5),
+        width: buffer.readUInt16BE(offset + 7),
+      };
+    }
+
+    offset += 2 + length;
+  }
+
+  return null;
 }
 
 function warnBadLine(lineNumber: number, reason: string) {
