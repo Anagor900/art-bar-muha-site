@@ -114,6 +114,31 @@
   font-size: 1.6rem;
 }
 
+.imageLoader {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.62);
+  box-shadow: 0 14px 38px rgba(33, 27, 25, 0.12);
+}
+
+.imageLoader span {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(94, 43, 18, 0.22);
+  border-top-color: var(--color-accent);
+  border-radius: 999px;
+  animation: exhibitionLoaderSpin 840ms linear infinite;
+}
+
+@keyframes exhibitionLoaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .frameButton {
   position: absolute;
   top: 50%;
@@ -443,5 +468,11 @@
 
   .lightboxNext {
     right: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageLoader span {
+    animation: none;
   }
 }

@@ -10,10 +10,14 @@ import { MenuSection } from "@/components/MenuSection/MenuSection";
 import { ProjectStrips } from "@/components/ProjectStrips/ProjectStrips";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import { ServicesSection } from "@/components/ServicesSection/ServicesSection";
+import { SiteImagePreloader } from "@/components/SiteImagePreloader/SiteImagePreloader";
 import { getExhibitionContent } from "@/lib/exhibition";
+import { normalizeLocalImageUrls } from "@/lib/preloadImages";
 import { getTextSections } from "@/lib/textSections";
+import afisha from "../../content/afisha.json";
 import barCards from "../../content/bar-cards.json";
 import contacts from "../../content/contacts.json";
+import downloads from "../../content/downloads.json";
 import menu from "../../content/menu.json";
 import meta from "../../content/site-meta.json";
 import barCardManifest from "../generated/bar-card-manifest.json";
@@ -41,9 +45,11 @@ const jsonLd = {
 export default function Home() {
   const texts = getTextSections();
   const exhibition = getExhibitionContent();
+  const preloadImageUrls = getPreloadImageUrls(exhibition.items.map((item) => item.imageSrc));
 
   return (
     <>
+      <SiteImagePreloader urls={preloadImageUrls} />
       <Header />
       <main>
         <Hero title={texts.main[0]} description={texts.main[1]} />
@@ -82,4 +88,19 @@ export default function Home() {
       <Footer />
     </>
   );
+}
+
+function getPreloadImageUrls(exhibitionImages: (string | null | undefined)[]) {
+  const barCardImages = Object.values(barCardManifest.cards ?? {}) as string[][];
+
+  return normalizeLocalImageUrls([
+    meta.heroImage,
+    meta.logoImage,
+    afisha.image,
+    ...exhibitionImages,
+    ...menu.pages.map((page) => `/menu/${page.image}`),
+    ...downloads.map((download) => download.file),
+    barCardManifest.cardBack,
+    ...barCardImages.flat(),
+  ]);
 }

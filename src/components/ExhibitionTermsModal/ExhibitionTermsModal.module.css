@@ -1,0 +1,190 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(10px, 2vw, 22px);
+  background: rgba(16, 13, 12, 0.72);
+  backdrop-filter: blur(8px);
+}
+
+.panel {
+  width: min(980px, 94vw);
+  height: min(92dvh, 920px);
+  min-height: min(640px, calc(100dvh - 20px));
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(94, 43, 18, 0.2);
+  border-radius: var(--radius);
+  background: #fffaf1;
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.34);
+  color: var(--color-ink);
+  outline: none;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: clamp(16px, 2.2vw, 26px) clamp(16px, 2.5vw, 30px) 14px;
+  border-bottom: 1px solid var(--color-line);
+  background: rgba(255, 250, 241, 0.96);
+}
+
+.headingGroup {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.headingGroup span {
+  color: var(--color-accent);
+  font-size: 0.86rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.headingGroup h2 {
+  max-width: 760px;
+  margin: 0;
+  font-size: clamp(1.8rem, 3.2vw, 3rem);
+  line-height: 1;
+}
+
+.headingGroup p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: clamp(1.02rem, 1.35vw, 1.24rem);
+  font-weight: 760;
+}
+
+.header button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.document {
+  min-height: 0;
+  position: relative;
+  overflow: auto;
+  padding: clamp(16px, 2.5vw, 30px);
+  background:
+    linear-gradient(rgba(255, 250, 241, 0.9), rgba(255, 250, 241, 0.9)),
+    radial-gradient(circle at 18% 12%, rgba(174, 125, 61, 0.18), transparent 34%),
+    radial-gradient(circle at 82% 72%, rgba(46, 111, 104, 0.12), transparent 36%);
+  user-select: text;
+}
+
+.document::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/muha-logo-transparent.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: min(54%, 430px);
+  opacity: 0.045;
+  pointer-events: none;
+}
+
+.documentInner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 22px;
+}
+
+.intro {
+  display: grid;
+  gap: 12px;
+}
+
+.intro p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: clamp(1rem, 1.15vw, 1.1rem);
+  line-height: 1.65;
+}
+
+.termsBlock {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(94, 43, 18, 0.18);
+  border-radius: calc(var(--radius) - 2px);
+  background: rgba(255, 250, 241, 0.72);
+}
+
+.termsBlock h3 {
+  margin: 0;
+  color: var(--color-accent);
+  font-size: clamp(1.25rem, 2vw, 1.8rem);
+  line-height: 1.12;
+}
+
+.termsBlock ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 22px;
+}
+
+.termsBlock li {
+  color: rgba(33, 27, 25, 0.86);
+  line-height: 1.55;
+}
+
+.note {
+  margin: 0;
+  padding: 14px 16px;
+  border-left: 4px solid var(--color-accent);
+  border-radius: 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0;
+  background: rgba(94, 43, 18, 0.07);
+  color: rgba(33, 27, 25, 0.86);
+  font-weight: 780;
+  line-height: 1.55;
+}
+
+@media (max-width: 720px) {
+  .panel {
+    width: calc(100vw - 20px);
+    height: calc(100dvh - 20px);
+    min-height: 0;
+  }
+
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header button {
+    align-self: flex-start;
+    min-width: 132px;
+  }
+
+  .document {
+    padding: 14px;
+  }
+
+  .document::before {
+    background-size: 78%;
+  }
+
+  .termsBlock {
+    padding: 14px;
+  }
+}
