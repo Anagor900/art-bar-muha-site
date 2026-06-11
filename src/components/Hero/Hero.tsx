@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { ButtonLink } from "@/components/ButtonLink/ButtonLink";
+import { ContactAction } from "@/components/ContactAction/ContactAction";
 import contacts from "../../../content/contacts.json";
 import meta from "../../../content/site-meta.json";
 import styles from "./Hero.module.css";
@@ -38,7 +38,7 @@ export function Hero({ title, description }: HeroProps) {
             <span>Живая музыка · картины · домашние настойки</span>
           </div>
           <div className={styles.actions}>
-            <ButtonLink href="#contacts">Связаться с нами</ButtonLink>
+            <ContactAction>Связаться с нами</ContactAction>
           </div>
         </div>
       </div>

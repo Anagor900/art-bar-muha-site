@@ -86,6 +86,27 @@ export function TechnicalRiderModal({ downloadFileName, downloadHref, onClose }:
                     </tbody>
                   </table>
                 </div>
+                <div className={styles.mobileCards}>
+                  {section.items.map((item) => (
+                    <article className={styles.equipmentCard} key={`${section.title}-${item.position}`}>
+                      <h4>{item.position}</h4>
+                      <dl>
+                        {item.quantity ? (
+                          <div>
+                            <dt>Количество</dt>
+                            <dd>{item.quantity}</dd>
+                          </div>
+                        ) : null}
+                        {item.details ? (
+                          <div>
+                            <dt>Характеристики</dt>
+                            <dd>{item.details}</dd>
+                          </div>
+                        ) : null}
+                      </dl>
+                    </article>
+                  ))}
+                </div>
               </section>
             ))}
           </div>

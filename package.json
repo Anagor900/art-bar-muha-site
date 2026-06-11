@@ -6,7 +6,7 @@
     "dev": "next dev",
     "bar-card:import": "python scripts/import-bar-cards-from-pdf.py",
     "bar-card:manifest": "node scripts/generate-bar-card-manifest.mjs",
-    "prebuild": "node scripts/generate-bar-card-manifest.mjs",
+    "prebuild": "node scripts/generate-bar-card-manifest.mjs && node scripts/generate-banquet-menu.mjs",
     "build": "next build",
     "start": "next start -H 127.0.0.1 -p 3000",
     "lint": "eslint .",
@@ -14,8 +14,10 @@
     "test": "npm run typecheck"
   },
   "dependencies": {
+    "fflate": "^0.8.3",
     "next": "^15.3.5",
     "react": "^19.0.0",
+    "fflate": "^0.8.2",
     "react-dom": "^19.0.0"
   },
   "overrides": {

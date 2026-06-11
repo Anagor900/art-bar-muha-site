@@ -3,12 +3,12 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent } from "react";
+import { ContactAction } from "@/components/ContactAction/ContactAction";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import { ZoomableImageViewer } from "@/components/ZoomableImageViewer/ZoomableImageViewer";
 import { usePreloadImages } from "@/hooks/usePreloadImages";
 import type { ExhibitionContent, ExhibitionPainting } from "@/lib/exhibition";
 import type { PreloadImageResult } from "@/lib/preloadImages";
-import contacts from "../../../content/contacts.json";
 import styles from "./ExhibitionSection.module.css";
 
 type ExhibitionSectionProps = {
@@ -147,7 +147,7 @@ export function ExhibitionSection({ exhibition }: ExhibitionSectionProps) {
                   <span key={line}>{line}</span>
                 ))}
               </p>
-              <a href={contacts.phones[0].href}>{active.contactLabel}</a>
+              <ContactAction>{active.contactLabel}</ContactAction>
             </div>
           </article>
         </div>
@@ -201,7 +201,7 @@ function PaintingFrame({
           onClick={onOpen}
           type="button"
         >
-          <img alt={label} src={painting.imageSrc ?? ""} />
+          <img alt={label} key={painting.id} src={painting.imageSrc ?? ""} />
         </button>
       ) : shouldShowLoader ? (
         <ImageLoader />

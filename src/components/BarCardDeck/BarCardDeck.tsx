@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties } from "react";
+import type { CSSProperties, PointerEvent } from "react";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import styles from "./BarCardDeck.module.css";
 
@@ -24,6 +24,7 @@ type BarCardDeckProps = {
 };
 
 type MotionState = "idle" | "nextLeaving" | "nextEntering" | "prevLeaving" | "prevEntering";
+type MobileMotionState = "idle" | "next" | "previous";
 type BarCardManifest = {
   cardBack?: string | null;
   cards?: Record<string, string[]>;
@@ -53,7 +54,11 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
   const [cardBackReady, setCardBackReady] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const [motion, setMotion] = useState<MotionState>("idle");
+  const [mobileActiveIndex, setMobileActiveIndex] = useState(0);
+  const [mobileMotion, setMobileMotion] = useState<MobileMotionState>("idle");
   const timers = useRef<number[]>([]);
+  const mobileClickLock = useRef(false);
+  const mobileSwipeStart = useRef<{ x: number; y: number } | null>(null);
   const activeCard = activeId ? cardMap.get(activeId) : undefined;
   const backSrc = cardBackUrl(manifest);
 
@@ -112,6 +117,10 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
     };
   }, []);
 
+  useEffect(() => {
+    setMobileActiveIndex((index) => (cards.length > 0 ? Math.min(index, cards.length - 1) : 0));
+  }, [cards.length]);
+
   function queueTimer(callback: () => void, delay: number) {
     const timer = window.setTimeout(callback, delay);
     timers.current.push(timer);
@@ -163,6 +172,85 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
       setMotion("idle");
       setIsMoving(false);
     }, animationMs);
+  }
+
+  function showMobileNext() {
+    showMobileCard("next");
+  }
+
+  function showMobilePrevious() {
+    showMobileCard("previous");
+  }
+
+  function handleMobileCardClick() {
+    if (mobileClickLock.current) {
+      mobileClickLock.current = false;
+      return;
+    }
+
+    showMobileNext();
+  }
+
+  function showMobileCard(direction: Exclude<MobileMotionState, "idle">) {
+    if (cards.length <= 1) {
+      return;
+    }
+
+    setMobileMotion(direction);
+    setMobileActiveIndex((index) =>
+      direction === "next" ? (index + 1) % cards.length : (index - 1 + cards.length) % cards.length,
+    );
+    queueTimer(() => {
+      setMobileMotion("idle");
+    }, 240);
+  }
+
+  function handleMobilePointerDown(event: PointerEvent<HTMLElement>) {
+    if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) {
+      return;
+    }
+
+    mobileSwipeStart.current = {
+      x: event.clientX,
+      y: event.clientY,
+    };
+  }
+
+  function handleMobilePointerUp(event: PointerEvent<HTMLElement>) {
+    const start = mobileSwipeStart.current;
+
+    if (!start) {
+      return;
+    }
+
+    mobileSwipeStart.current = null;
+
+    const deltaX = event.clientX - start.x;
+    const deltaY = event.clientY - start.y;
+
+    if (Math.abs(deltaX) < 46 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      lockMobileClick();
+      showMobileNext();
+      return;
+    }
+
+    lockMobileClick();
+    showMobilePrevious();
+  }
+
+  function handleMobilePointerCancel() {
+    mobileSwipeStart.current = null;
+  }
+
+  function lockMobileClick() {
+    mobileClickLock.current = true;
+    queueTimer(() => {
+      mobileClickLock.current = false;
+    }, 260);
   }
 
   return (
@@ -224,8 +312,112 @@ export function BarCardDeck({ cards, manifest, intro }: BarCardDeckProps) {
             onClick={openPreviousCocktail}
           />
         </div>
+        <MobileCardCarousel
+          activeIndex={mobileActiveIndex}
+          cardBackReady={cardBackReady}
+          cardBackSrc={backSrc}
+          cards={cards}
+          loadedImages={loadedImages}
+          manifest={manifest}
+          motion={mobileMotion}
+          onCardClick={handleMobileCardClick}
+          onNext={showMobileNext}
+          onPointerCancel={handleMobilePointerCancel}
+          onPointerDown={handleMobilePointerDown}
+          onPointerUp={handleMobilePointerUp}
+          onPrevious={showMobilePrevious}
+        />
       </div>
     </section>
+  );
+}
+
+function MobileCardCarousel({
+  activeIndex,
+  cardBackReady,
+  cardBackSrc,
+  cards,
+  loadedImages,
+  manifest,
+  motion,
+  onCardClick,
+  onNext,
+  onPointerCancel,
+  onPointerDown,
+  onPointerUp,
+  onPrevious,
+}: {
+  activeIndex: number;
+  cardBackReady: boolean;
+  cardBackSrc: string;
+  cards: BarCard[];
+  loadedImages: Record<string, boolean>;
+  manifest: BarCardManifest;
+  motion: MobileMotionState;
+  onCardClick: () => void;
+  onNext: () => void;
+  onPointerCancel: () => void;
+  onPointerDown: (event: PointerEvent<HTMLElement>) => void;
+  onPointerUp: (event: PointerEvent<HTMLElement>) => void;
+  onPrevious: () => void;
+}) {
+  const activeCard = cards[activeIndex];
+
+  if (!activeCard) {
+    return (
+      <div className={styles.mobileCarousel}>
+        <div className={styles.emptyState}>
+          <strong>Барная карта скоро появится.</strong>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.mobileCarousel} aria-label="Мобильная карусель коктейльных карточек">
+      <div
+        className={styles.mobileStack}
+        data-motion={motion}
+        onPointerCancel={onPointerCancel}
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+      >
+        <CardBack imageReady={cardBackReady} imageSrc={cardBackSrc} stackIndex={1} />
+        <button
+          aria-label="Показать следующую карточку"
+          className={styles.mobileCardButton}
+          onClick={onCardClick}
+          type="button"
+        >
+          <CocktailCard
+            card={activeCard}
+            imageReady={loadedImages[activeCard.id]}
+            imageSrc={imageUrl(activeCard, manifest)}
+            large
+          />
+        </button>
+      </div>
+      <div className={styles.mobileControls}>
+        <button aria-label="Предыдущая карточка" onClick={onPrevious} type="button">
+          ←
+        </button>
+        <span aria-live="polite">
+          {activeIndex + 1} / {cards.length}
+        </span>
+        <button aria-label="Следующая карточка" onClick={onNext} type="button">
+          →
+        </button>
+      </div>
+      <article className={styles.mobileDescription} aria-live="polite">
+        <h3>{activeCard.title}</h3>
+        <p>{activeCard.description}</p>
+        <ul>
+          {activeCard.notes.map((note) => (
+            <li key={note}>{note}</li>
+          ))}
+        </ul>
+      </article>
+    </div>
   );
 }
 

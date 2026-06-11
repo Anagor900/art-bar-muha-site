@@ -39,8 +39,10 @@
   padding: 0 16px;
   border: 1px solid var(--color-accent);
   border-radius: var(--radius);
-  color: var(--color-accent);
+  background: var(--color-accent);
+  color: #fffaf1;
   font-weight: 780;
+  text-align: center;
 }
 
 .downloads {
@@ -50,9 +52,9 @@
 }
 
 .downloads div {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
   align-items: center;
-  justify-content: space-between;
   gap: 18px;
   padding: 16px 18px;
   border: 1px solid var(--color-line);
@@ -61,6 +63,7 @@
 }
 
 .downloads span {
+  min-width: 0;
   font-weight: 720;
 }
 
@@ -74,6 +77,7 @@
 
 .downloads a,
 .documentButton {
+  width: 190px;
   min-height: 40px;
   display: inline-flex;
   align-items: center;
@@ -82,6 +86,8 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
   background: rgba(255, 250, 241, 0.72);
+  justify-self: end;
+  text-align: center;
 }
 
 .documentButton {
@@ -101,6 +107,12 @@
 
   .downloads div {
     align-items: flex-start;
-    flex-direction: column;
+    grid-template-columns: 1fr;
+  }
+
+  .downloads a,
+  .documentButton {
+    width: 100%;
+    justify-self: stretch;
   }
 }

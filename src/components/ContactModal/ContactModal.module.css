@@ -1,0 +1,175 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: clamp(10px, 2vw, 22px);
+  background: rgba(16, 13, 12, 0.56);
+  backdrop-filter: blur(8px);
+}
+
+.panel {
+  width: min(640px, calc(100vw - 20px));
+  max-height: calc(100dvh - 20px);
+  display: grid;
+  grid-template-rows: auto auto;
+  overflow: hidden;
+  border: 1px solid rgba(94, 43, 18, 0.2);
+  border-radius: var(--radius);
+  background: #fffaf1;
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.34);
+  color: var(--color-ink);
+  outline: none;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid var(--color-line);
+  background: rgba(255, 250, 241, 0.96);
+}
+
+.headingGroup {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.headingGroup h2 {
+  margin: 0;
+  font-size: clamp(1.7rem, 3.5vw, 2.35rem);
+  line-height: 1;
+}
+
+.headingGroup p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 1rem;
+  font-weight: 760;
+}
+
+.header button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.document {
+  min-height: 0;
+  position: relative;
+  overflow: auto;
+  padding: 18px 22px 22px;
+  background: #fffaf1;
+  user-select: text;
+}
+
+.documentInner {
+  position: relative;
+  z-index: 1;
+}
+
+.contactGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.contactRow {
+  display: grid;
+  grid-template-columns: minmax(92px, 0.26fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 10px 12px;
+  border: 1px solid rgba(94, 43, 18, 0.16);
+  border-radius: calc(var(--radius) - 2px);
+  background: rgba(255, 250, 241, 0.74);
+}
+
+.contactRow > span {
+  color: var(--color-muted);
+  font-weight: 780;
+}
+
+.contactValue {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.contactRow a {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  color: var(--color-accent);
+  font-weight: 850;
+}
+
+.contactValue small,
+.placeholder {
+  color: var(--color-muted);
+  font-size: 0.92rem;
+}
+
+.copyButton {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.42);
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 820;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.copyButton:hover {
+  border-color: var(--color-accent);
+  background: rgba(94, 43, 18, 0.06);
+}
+
+@media (max-width: 640px) {
+  .panel {
+    width: calc(100vw - 20px);
+  }
+
+  .header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .header button {
+    width: 100%;
+  }
+
+  .document {
+    padding: 14px;
+  }
+
+  .contactRow {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .contactRow > span {
+    grid-column: 1 / -1;
+  }
+}

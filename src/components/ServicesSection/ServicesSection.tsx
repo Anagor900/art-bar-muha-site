@@ -1,26 +1,45 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
+import { BanquetMenuModal } from "@/components/BanquetMenuModal/BanquetMenuModal";
+import { ContactAction } from "@/components/ContactAction/ContactAction";
 import { ExhibitionTermsModal } from "@/components/ExhibitionTermsModal/ExhibitionTermsModal";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import { TechnicalRiderModal } from "@/components/TechnicalRiderModal/TechnicalRiderModal";
 import { ZoomableImageViewer } from "@/components/ZoomableImageViewer/ZoomableImageViewer";
-import contacts from "../../../content/contacts.json";
 import downloads from "../../../content/downloads.json";
 import services from "../../../content/services.json";
 import styles from "./ServicesSection.module.css";
 
 const HALL_PLAN_FILE = "/downloads/hall-plan.png";
 const HALL_PLAN_DOWNLOAD_FILE_NAME = "plan-zalov-art-bar-muha.png";
+const BANQUET_MENU_FILE = "/downloads/MUHA_Banquet_Menu.xlsx";
 const TECHNICAL_RIDER_FILE = "/downloads/teh_rayder_muha_red.docx";
 const TECHNICAL_RIDER_DOWNLOAD_FILE_NAME = "teh-rayder-art-bar-muha.docx";
 
 export function ServicesSection() {
+  const [banquetMenuOpen, setBanquetMenuOpen] = useState(false);
   const [hallPlanOpen, setHallPlanOpen] = useState(false);
   const [exhibitionTermsOpen, setExhibitionTermsOpen] = useState(false);
   const [technicalRiderOpen, setTechnicalRiderOpen] = useState(false);
+  const banquetMenuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const hallPlanButtonRef = useRef<HTMLButtonElement | null>(null);
   const exhibitionTermsButtonRef = useRef<HTMLButtonElement | null>(null);
   const technicalRiderButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const closeBanquetMenu = useCallback(() => {
+    setBanquetMenuOpen(false);
+    window.setTimeout(() => {
+      banquetMenuButtonRef.current?.focus();
+    }, 0);
+  }, []);
+
+  const closeHallPlan = useCallback(() => {
+    setHallPlanOpen(false);
+    window.setTimeout(() => {
+      hallPlanButtonRef.current?.focus();
+    }, 0);
+  }, []);
 
   const closeExhibitionTerms = useCallback(() => {
     setExhibitionTermsOpen(false);
@@ -50,12 +69,13 @@ export function ServicesSection() {
             <article className={styles.card} key={service.title}>
               <h3>{service.title}</h3>
               <p>{service.description}</p>
-              <a href={contacts.phones[0].href}>{service.cta}</a>
+              <ContactAction>{service.cta}</ContactAction>
             </article>
           ))}
         </div>
         <div className={styles.downloads} aria-label="Документы">
           {downloads.map((download) => {
+            const isBanquetMenu = download.file === BANQUET_MENU_FILE;
             const isHallPlan = download.file === HALL_PLAN_FILE;
             const isExhibitionTerms = download.title === "Базовые условия участия в выставках Арт-Ресто-Бара «МУХА»";
             const isTechnicalRider = download.file === TECHNICAL_RIDER_FILE;
@@ -63,11 +83,22 @@ export function ServicesSection() {
             return (
               <div key={download.title}>
                 <span>{download.title}</span>
-                {isHallPlan ? (
+                {isBanquetMenu ? (
+                  <button
+                    aria-label="Открыть банкетное меню"
+                    className={styles.documentButton}
+                    onClick={() => setBanquetMenuOpen(true)}
+                    ref={banquetMenuButtonRef}
+                    type="button"
+                  >
+                    Банкетное меню
+                  </button>
+                ) : isHallPlan ? (
                   <button
                     aria-label="Открыть план залов"
                     className={styles.documentButton}
                     onClick={() => setHallPlanOpen(true)}
+                    ref={hallPlanButtonRef}
                     type="button"
                   >
                     План залов
@@ -109,7 +140,7 @@ export function ServicesSection() {
           downloadFileName={HALL_PLAN_DOWNLOAD_FILE_NAME}
           downloadHref={HALL_PLAN_FILE}
           eyebrow="Документы"
-          onClose={() => setHallPlanOpen(false)}
+          onClose={closeHallPlan}
           showDownload
           src={HALL_PLAN_FILE}
           subtitle="Арт-Ресто-Бар МУХА"
@@ -117,6 +148,8 @@ export function ServicesSection() {
           variant="document"
         />
       ) : null}
+
+      {banquetMenuOpen ? <BanquetMenuModal onClose={closeBanquetMenu} /> : null}
 
       {exhibitionTermsOpen ? <ExhibitionTermsModal onClose={closeExhibitionTerms} /> : null}
 

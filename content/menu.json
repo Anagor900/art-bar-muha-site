@@ -3,22 +3,42 @@
     {
       "id": "menu-01",
       "title": "Страница меню 1",
-      "image": "menu-01.jpg"
+      "image": "menu-01.webp"
     },
     {
       "id": "menu-02",
       "title": "Страница меню 2",
-      "image": "menu-02.jpg"
+      "image": "menu-02.webp"
     },
     {
       "id": "menu-03",
       "title": "Страница меню 3",
-      "image": "menu-03.jpg"
+      "image": "menu-03.webp"
     },
     {
       "id": "menu-04",
       "title": "Страница меню 4",
-      "image": "menu-04.jpg"
+      "image": "menu-04.webp"
+    },
+    {
+      "id": "menu-05",
+      "title": "Страница меню 5",
+      "image": "menu-05.webp"
+    },
+    {
+      "id": "menu-06",
+      "title": "Страница меню 6",
+      "image": "menu-06.webp"
+    },
+    {
+      "id": "menu-07",
+      "title": "Страница меню 7",
+      "image": "menu-07.webp"
+    },
+    {
+      "id": "menu-08",
+      "title": "Страница меню 8",
+      "image": "menu-08.webp"
     }
   ]
 }

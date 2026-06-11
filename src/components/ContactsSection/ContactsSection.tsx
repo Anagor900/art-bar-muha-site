@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { ContactAction } from "@/components/ContactAction/ContactAction";
+import { ExternalLink } from "@/components/ExternalLink/ExternalLink";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
 import contacts from "../../../content/contacts.json";
 import styles from "./ContactsSection.module.css";
@@ -51,11 +53,9 @@ export function ContactsSection() {
             </p>
           </div>
           <div className={styles.quick}>
-            <a className={styles.textAction} href={contacts.phones[0].href}>
-              Позвонить
-            </a>
+            <ContactAction className={styles.textAction}>Позвонить</ContactAction>
             {socialLinks.map((social) => (
-              <a
+              <ExternalLink
                 aria-disabled={!social.enabled}
                 aria-label={social.ariaLabel}
                 className={`${styles.iconLink} ${!social.enabled ? styles.disabled : ""}`}
@@ -65,14 +65,14 @@ export function ContactsSection() {
                 title={social.ariaLabel}
               >
                 <img alt="" aria-hidden="true" src={social.icon} />
-              </a>
+              </ExternalLink>
             ))}
           </div>
         </div>
         <div className={styles.map}>
           <div>
             <strong>{contacts.address}</strong>
-            <a href={contacts.mapLink}>Открыть карту</a>
+            <ExternalLink href={contacts.mapLink}>Открыть в Яндекс.Картах</ExternalLink>
           </div>
           <iframe
             loading="lazy"

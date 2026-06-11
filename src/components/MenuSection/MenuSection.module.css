@@ -15,92 +15,68 @@
 }
 
 .carousel {
-  min-height: 540px;
+  min-height: 620px;
   display: grid;
   grid-template-rows: 1fr auto;
   overflow: hidden;
-  border: 1px solid var(--color-line);
+  border: 0;
   border-radius: var(--radius);
-  background:
-    linear-gradient(90deg, rgba(46, 111, 104, 0.13) 1px, transparent 1px) 0 0 / 26px 26px,
-    var(--color-surface);
-  box-shadow: var(--shadow-soft);
+  background: transparent;
 }
 
 .frame {
-  min-height: 470px;
+  position: relative;
+  min-height: 560px;
+  height: clamp(540px, 62vw, 720px);
   display: grid;
   place-items: center;
-  padding: 28px;
+  overflow: hidden;
+  background: transparent;
 }
 
-.frame img {
-  width: 100%;
+.imageButton {
+  width: auto;
+  max-width: min(100%, 520px);
   height: 100%;
-  max-height: 560px;
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.imageButton:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: -6px;
+}
+
+.imageButton img {
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
   object-fit: contain;
-}
-
-.menuPage {
-  width: min(78%, 360px);
-  aspect-ratio: 0.72;
-  display: grid;
-  align-content: start;
-  gap: 18px;
-  padding: 34px 30px;
-  border: 1px solid rgba(33, 27, 25, 0.18);
-  border-radius: calc(var(--radius) - 2px);
-  color: var(--color-ink);
-  background:
-    linear-gradient(180deg, rgba(255, 250, 241, 0.94), rgba(244, 239, 230, 0.95)),
-    repeating-linear-gradient(0deg, rgba(33, 27, 25, 0.08) 0 1px, transparent 1px 22px);
-  box-shadow: 0 24px 62px rgba(33, 27, 25, 0.16);
-}
-
-.menuPage span {
-  justify-self: end;
-  color: var(--color-accent);
-  font-size: 0.82rem;
-  font-weight: 900;
-}
-
-.menuPage strong {
-  max-width: 230px;
-  margin-bottom: 20px;
-  font-size: clamp(2.1rem, 4.5vw, 3.7rem);
-  line-height: 0.94;
-}
-
-.menuPage i {
-  height: 11px;
-  background: linear-gradient(90deg, var(--color-ink), transparent);
-  opacity: 0.46;
-}
-
-.menuPage i:nth-of-type(2) {
-  width: 78%;
-}
-
-.menuPage i:nth-of-type(3) {
-  width: 64%;
-}
-
-.menuPage i:nth-of-type(4) {
-  width: 86%;
+  animation: menuPageIn 220ms ease both;
 }
 
 .controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 16px;
-  padding: 18px;
-  border-top: 1px solid var(--color-line);
-  background: rgba(255, 250, 241, 0.74);
+  padding: 16px 0 0;
+  background: transparent;
 }
 
-.controls button {
+.frameButton,
+.dots button {
   width: 44px;
   height: 44px;
   border: 1px solid var(--color-line);
@@ -109,7 +85,40 @@
   font-weight: 900;
 }
 
-.controls button:focus-visible {
+.frameButton {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-color: rgba(255, 250, 241, 0.72);
+  background: rgba(255, 250, 241, 0.72);
+  color: var(--color-ink);
+  transform: translateY(-50%);
+  box-shadow: 0 14px 34px rgba(33, 27, 25, 0.14);
+  backdrop-filter: blur(8px);
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.frameButton:hover {
+  background: rgba(255, 250, 241, 0.92);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.previousButton {
+  left: 18px;
+}
+
+.nextButton {
+  right: 18px;
+}
+
+.frameButton:focus-visible,
+.dots button:focus-visible {
   outline: 3px solid rgba(46, 111, 104, 0.45);
   outline-offset: 4px;
 }
@@ -141,6 +150,50 @@
   font-weight: 780;
 }
 
+.imageLoader {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.62);
+  box-shadow: 0 14px 38px rgba(33, 27, 25, 0.12);
+}
+
+.imageLoader span {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(94, 43, 18, 0.22);
+  border-top-color: var(--color-accent);
+  border-radius: 999px;
+  animation: menuLoaderSpin 840ms linear infinite;
+}
+
+.errorState {
+  max-width: 320px;
+  color: var(--color-muted);
+  font-weight: 760;
+  text-align: center;
+}
+
+@keyframes menuPageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes menuLoaderSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
@@ -151,22 +204,34 @@
   }
 
   .frame {
-    min-height: 430px;
+    min-height: 480px;
+    height: min(132vw, 620px);
+    touch-action: pan-y;
   }
 }
 
 @media (max-width: 560px) {
-  .frame {
-    padding: 18px;
-  }
-
-  .menuPage {
-    width: min(88%, 320px);
-    padding: 28px 24px;
-  }
-
   .controls {
     gap: 10px;
-    padding: 14px;
+  }
+
+  .frameButton {
+    width: 44px;
+    height: 58px;
+  }
+
+  .previousButton {
+    left: 10px;
+  }
+
+  .nextButton {
+    right: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageButton img,
+  .imageLoader span {
+    animation: none;
   }
 }

@@ -52,6 +52,7 @@ export function ZoomableImageViewer({
   const [isPanning, setIsPanning] = useState(false);
   const [imageState, setImageState] = useState<"loading" | "loaded" | "error">("loading");
   const isPanningRef = useRef(false);
+  const panelRef = useRef<HTMLDivElement | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const pointerState = useRef({
@@ -66,6 +67,7 @@ export function ZoomableImageViewer({
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow;
     const previousHtmlOverflow = document.documentElement.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -75,12 +77,14 @@ export function ZoomableImageViewer({
 
     document.body.style.overflow = "hidden";
     document.documentElement.style.overflow = "hidden";
+    panelRef.current?.focus();
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [onClose]);
 
@@ -318,7 +322,7 @@ export function ZoomableImageViewer({
       onClick={onClose}
       role="dialog"
     >
-      <div className={styles.panel} onClick={(event) => event.stopPropagation()}>
+      <div className={styles.panel} onClick={(event) => event.stopPropagation()} ref={panelRef} tabIndex={-1}>
         <div className={styles.topbar}>
           <div className={styles.titleBlock}>
             {eyebrow ? <span>{eyebrow}</span> : null}

@@ -5,43 +5,33 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 24px;
-  background: rgba(16, 13, 12, 0.9);
-}
-
-.viewer[data-variant="document"] {
   padding: clamp(10px, 2vw, 22px);
-  background: rgba(16, 13, 12, 0.72);
+  background: rgba(16, 13, 12, 0.52);
   backdrop-filter: blur(8px);
 }
 
 .panel {
   position: relative;
-  width: min(100%, 1280px);
-  height: min(100%, 860px);
-  max-height: calc(100vh - 48px);
+  width: min(1040px, calc(100vw - 20px));
+  height: min(88dvh, 820px);
+  max-height: calc(100dvh - 20px);
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 16px;
-  padding: 18px;
-  border: 1px solid rgba(255, 250, 241, 0.24);
+  gap: 0;
+  padding: 0;
+  border: 1px solid rgba(94, 43, 18, 0.2);
   border-radius: var(--radius);
-  background: rgba(33, 27, 25, 0.78);
-  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.42);
-  color: #fffaf1;
+  background: #fffaf1;
+  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.34);
+  color: var(--color-ink);
   overflow: hidden;
+  outline: none;
 }
 
 .viewer[data-variant="document"] .panel {
   width: min(1100px, 94vw);
   height: min(92dvh, 920px);
   min-height: min(680px, calc(100dvh - 20px));
-  gap: 0;
-  padding: 0;
-  border: 1px solid rgba(94, 43, 18, 0.2);
-  background: #fffaf1;
-  box-shadow: 0 34px 100px rgba(0, 0, 0, 0.34);
-  color: var(--color-ink);
 }
 
 .topbar {
@@ -49,9 +39,6 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 18px;
-}
-
-.viewer[data-variant="document"] .topbar {
   padding: clamp(16px, 2.2vw, 26px) clamp(16px, 2.5vw, 30px) 14px;
   border-bottom: 1px solid var(--color-line);
   background: rgba(255, 250, 241, 0.96);
@@ -64,11 +51,6 @@
 }
 
 .titleBlock span {
-  color: rgba(255, 250, 241, 0.72);
-  font-weight: 800;
-}
-
-.viewer[data-variant="document"] .titleBlock span {
   color: var(--color-accent);
   font-size: 0.86rem;
   font-weight: 850;
@@ -76,8 +58,14 @@
 }
 
 .titleBlock strong {
-  font-size: clamp(1.25rem, 2vw, 2rem);
-  line-height: 1.08;
+  font-size: clamp(1.45rem, 2.6vw, 2.35rem);
+  line-height: 1;
+}
+
+.titleBlock em {
+  color: var(--color-muted);
+  font-size: clamp(1rem, 1.25vw, 1.16rem);
+  font-weight: 760;
 }
 
 .viewer[data-variant="document"] .titleBlock strong {
@@ -85,15 +73,8 @@
   line-height: 0.95;
 }
 
-.titleBlock em {
-  color: rgba(255, 250, 241, 0.78);
-  font-style: normal;
-}
-
 .viewer[data-variant="document"] .titleBlock em {
-  color: var(--color-muted);
   font-size: clamp(1.05rem, 1.4vw, 1.28rem);
-  font-weight: 760;
 }
 
 .tools {
@@ -110,13 +91,13 @@
   height: 42px;
   display: inline-grid;
   place-items: center;
-  border: 1px solid rgba(255, 250, 241, 0.28);
+  border: 1px solid var(--color-accent);
   border-radius: 999px;
-  background: rgba(255, 250, 241, 0.12);
-  color: #fffaf1;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
   font-weight: 850;
   text-decoration: none;
-  backdrop-filter: blur(8px);
 }
 
 .tools button:disabled {
@@ -124,16 +105,7 @@
   opacity: 0.42;
 }
 
-.viewer[data-variant="document"] .tools button,
-.viewer[data-variant="document"] .tools a {
-  border-color: var(--color-accent);
-  background: transparent;
-  color: var(--color-accent);
-  font: inherit;
-  font-weight: 850;
-  backdrop-filter: none;
-}
-
+.downloadButton,
 .viewer[data-variant="document"] .downloadButton {
   background: var(--color-accent);
   color: #fffaf1;
@@ -152,8 +124,13 @@
   display: grid;
   place-items: center;
   overflow: hidden;
+  margin: clamp(14px, 2vw, 22px);
+  border: 1px solid var(--color-line);
   border-radius: calc(var(--radius) - 2px);
-  background: rgba(0, 0, 0, 0.18);
+  background:
+    linear-gradient(rgba(255, 250, 241, 0.9), rgba(255, 250, 241, 0.9)),
+    radial-gradient(circle at 12% 12%, rgba(174, 125, 61, 0.2), transparent 32%),
+    radial-gradient(circle at 86% 82%, rgba(46, 111, 104, 0.13), transparent 34%);
   overscroll-behavior: contain;
   touch-action: none;
   user-select: none;
@@ -190,7 +167,7 @@
   max-height: 100%;
   display: block;
   object-fit: contain;
-  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.34);
+  box-shadow: 0 18px 46px rgba(33, 27, 25, 0.2);
   pointer-events: none;
   transform-origin: center center;
   transition: transform 120ms ease;
@@ -237,36 +214,23 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: rgba(255, 250, 241, 0.1);
-}
-
-.viewer[data-variant="document"] .loader {
   background: rgba(94, 43, 18, 0.08);
 }
 
 .loader span {
   width: 38px;
   height: 38px;
-  border: 3px solid rgba(255, 250, 241, 0.28);
-  border-top-color: #fffaf1;
+  border-color: rgba(94, 43, 18, 0.22);
+  border-top-color: var(--color-accent);
   border-radius: 999px;
   animation: viewerSpin 840ms linear infinite;
 }
 
-.viewer[data-variant="document"] .loader span {
-  border-color: rgba(94, 43, 18, 0.22);
-  border-top-color: var(--color-accent);
-}
-
 .errorState {
   max-width: 320px;
-  color: rgba(255, 250, 241, 0.78);
+  color: var(--color-muted);
   font-weight: 760;
   text-align: center;
-}
-
-.viewer[data-variant="document"] .errorState {
-  color: var(--color-muted);
 }
 
 @keyframes viewerSpin {
@@ -291,16 +255,15 @@
   }
 
   .panel {
-    height: calc(100vh - 20px);
+    width: calc(100vw - 20px);
+    height: calc(100dvh - 20px);
     max-height: none;
-    padding: 12px;
+    padding: 0;
   }
 
   .viewer[data-variant="document"] .panel {
-    width: calc(100vw - 20px);
     height: calc(100dvh - 20px);
     min-height: 0;
-    padding: 0;
   }
 
   .topbar {
@@ -308,6 +271,7 @@
     flex-direction: column;
   }
 
+  .topbar,
   .viewer[data-variant="document"] .topbar {
     padding: 16px;
   }
@@ -321,6 +285,8 @@
     min-width: 42px;
   }
 
+  .downloadButton,
+  .closeButton,
   .viewer[data-variant="document"] .downloadButton,
   .viewer[data-variant="document"] .closeButton {
     padding: 0 14px;

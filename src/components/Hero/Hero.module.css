@@ -27,6 +27,7 @@
   background-position: 62% center;
   background-size: cover;
   filter: blur(3.6px) saturate(0.74) contrast(0.84) brightness(1.02);
+  pointer-events: none;
   transform: scale(1.015);
 }
 
@@ -71,9 +72,9 @@
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: minmax(190px, 300px) minmax(0, 740px);
+  grid-template-columns: minmax(230px, 360px) minmax(0, 740px);
   align-items: center;
-  gap: clamp(16px, 2vw, 28px);
+  gap: clamp(18px, 2.4vw, 36px);
   align-content: center;
   padding: clamp(24px, 4.5vh, 48px) 0;
 }
@@ -85,7 +86,7 @@
 }
 
 .logoWrap {
-  width: clamp(190px, 22vw, 300px);
+  width: clamp(230px, 25vw, 360px);
   aspect-ratio: 1;
   display: grid;
   place-items: center;
@@ -167,7 +168,7 @@
   }
 
   .logoWrap {
-    width: clamp(170px, 23vw, 260px);
+    width: clamp(190px, 24vw, 300px);
   }
 
   .content h1 {
@@ -213,7 +214,8 @@
   }
 
   .logoWrap {
-    width: clamp(120px, 38vw, 188px);
+    width: clamp(168px, 54vw, 260px);
+    justify-self: center;
   }
 
   .content h1 {

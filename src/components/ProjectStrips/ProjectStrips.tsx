@@ -1,6 +1,7 @@
 "use client";
 
 import type { PointerEvent } from "react";
+import { ExternalLink } from "@/components/ExternalLink/ExternalLink";
 import projects from "../../../content/projects.json";
 import styles from "./ProjectStrips.module.css";
 
@@ -32,7 +33,7 @@ export function ProjectStrips() {
     <section className={styles.section} aria-label="Связанные проекты">
       <div className={`container ${styles.grid}`}>
         {projects.map((project) => (
-          <a
+          <ExternalLink
             className={styles.strip}
             data-tone={project.tone}
             href={project.href}
@@ -43,7 +44,7 @@ export function ProjectStrips() {
             <span aria-hidden="true" />
             <strong>{project.title}</strong>
             <p>{project.description}</p>
-          </a>
+          </ExternalLink>
         ))}
       </div>
     </section>

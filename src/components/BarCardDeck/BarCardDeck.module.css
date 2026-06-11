@@ -261,6 +261,86 @@ button.pile:not(:disabled):hover .cardBack:first-child {
   font-size: 2rem;
 }
 
+.mobileCarousel {
+  display: none;
+}
+
+.mobileStack {
+  position: relative;
+}
+
+.mobileCardButton {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.mobileCardButton:focus-visible {
+  outline: 3px solid rgba(171, 61, 51, 0.38);
+  outline-offset: 8px;
+}
+
+.mobileControls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileControls button {
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.82);
+  color: var(--color-ink);
+  font: inherit;
+  font-weight: 900;
+}
+
+.mobileDescription {
+  display: grid;
+  gap: 12px;
+  text-align: center;
+}
+
+.mobileDescription h3,
+.mobileDescription p {
+  margin: 0;
+}
+
+.mobileDescription h3 {
+  font-size: clamp(2rem, 10vw, 3.1rem);
+  line-height: 0.98;
+}
+
+.mobileDescription p {
+  color: var(--color-muted);
+  line-height: 1.62;
+}
+
+.mobileDescription ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mobileDescription li {
+  padding: 8px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: rgba(255, 250, 241, 0.78);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 760;
+}
+
 @keyframes cardLeaveRight {
   to {
     opacity: 0.2;
@@ -299,6 +379,30 @@ button.pile:not(:disabled):hover .cardBack:first-child {
   }
 }
 
+@keyframes mobileCardNext {
+  from {
+    opacity: 0.52;
+    transform: translateX(18px) translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
+@keyframes mobileCardPrevious {
+  from {
+    opacity: 0.52;
+    transform: translateX(-18px) translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cardBack,
   .cocktailCard {
@@ -306,6 +410,10 @@ button.pile:not(:disabled):hover .cardBack:first-child {
   }
 
   .center[data-motion] .largeCard {
+    animation: none;
+  }
+
+  .mobileStack[data-motion] .mobileCardButton {
     animation: none;
   }
 }
@@ -368,5 +476,110 @@ button.pile:not(:disabled):hover .cardBack:first-child {
     width: min(72vw, 300px);
     height: auto;
     aspect-ratio: var(--bar-card-aspect);
+  }
+}
+
+@media (max-width: 700px) {
+  .section {
+    padding: 82px 0;
+  }
+
+  .board {
+    display: none;
+  }
+
+  .mobileCarousel {
+    display: grid;
+    gap: 16px;
+    margin-top: 30px;
+    overflow: hidden;
+    padding: 18px;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(circle at 18% 18%, rgba(143, 36, 50, 0.13), transparent 14rem),
+      radial-gradient(circle at 82% 70%, rgba(46, 111, 104, 0.14), transparent 16rem),
+      linear-gradient(145deg, #ead9c4, #f8f2e9);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .mobileStack {
+    min-height: min(116vw, 470px);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    isolation: isolate;
+    touch-action: pan-y;
+  }
+
+  .mobileStack .cardBack {
+    position: absolute;
+    inset: 0;
+    width: min(66vw, 250px);
+    height: auto;
+    aspect-ratio: var(--bar-card-aspect);
+    margin: auto;
+    opacity: 0.58;
+    transform: translate(14px, -10px) rotate(4deg);
+    z-index: 1;
+  }
+
+  .mobileStack .cardBack::after {
+    position: absolute;
+    inset: 7px;
+    border: 1px solid rgba(255, 250, 241, 0.34);
+    border-radius: calc(var(--radius) - 3px);
+    content: "";
+  }
+
+  .mobileCardButton .largeCard {
+    position: relative;
+    inset: auto;
+    width: min(68vw, 260px);
+    height: auto;
+    aspect-ratio: var(--bar-card-aspect);
+    margin: 0;
+    background: #2b1d0d;
+    border: 1px solid rgba(33, 27, 25, 0.16);
+    box-shadow: 0 24px 54px rgba(33, 27, 25, 0.26);
+    transform: rotate(-1.2deg);
+  }
+
+  .mobileCardButton .largeCard img {
+    background: #2b1d0d;
+    object-fit: contain;
+  }
+
+  .mobileCardButton .cardPlaceholder strong {
+    font-size: clamp(1.7rem, 8vw, 2.7rem);
+  }
+
+  .mobileStack[data-motion="next"] .mobileCardButton {
+    animation: mobileCardNext 220ms ease both;
+  }
+
+  .mobileStack[data-motion="previous"] .mobileCardButton {
+    animation: mobileCardPrevious 220ms ease both;
+  }
+
+  .mobileControls {
+    gap: 14px;
+  }
+
+  .mobileControls button {
+    width: 46px;
+    height: 46px;
+  }
+
+  .mobileControls span {
+    min-width: 76px;
+    color: var(--color-muted);
+    font-weight: 850;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobileStack[data-motion] .mobileCardButton {
+    animation: none;
   }
 }

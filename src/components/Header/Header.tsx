@@ -2,8 +2,9 @@
 
 /* eslint-disable @next/next/no-img-element */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MouseEvent } from "react";
+import { ExternalLink } from "@/components/ExternalLink/ExternalLink";
 import contacts from "../../../content/contacts.json";
 import meta from "../../../content/site-meta.json";
 import styles from "./Header.module.css";
@@ -32,6 +33,39 @@ const socialLinks = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    let animationFrame = 0;
+
+    function closeOnScrollStart() {
+      if (animationFrame) {
+        return;
+      }
+
+      animationFrame = window.requestAnimationFrame(() => {
+        animationFrame = 0;
+        setOpen(false);
+      });
+    }
+
+    window.addEventListener("scroll", closeOnScrollStart, { passive: true });
+    window.addEventListener("touchmove", closeOnScrollStart, { passive: true });
+    window.addEventListener("wheel", closeOnScrollStart, { passive: true });
+
+    return () => {
+      if (animationFrame) {
+        window.cancelAnimationFrame(animationFrame);
+      }
+
+      window.removeEventListener("scroll", closeOnScrollStart);
+      window.removeEventListener("touchmove", closeOnScrollStart);
+      window.removeEventListener("wheel", closeOnScrollStart);
+    };
+  }, [open]);
 
   function handleAnchorClick(event: MouseEvent<HTMLAnchorElement>, href: string) {
     if (!href.startsWith("#") || href === "#") {
@@ -128,7 +162,7 @@ function SocialIcons() {
   return (
     <div className={styles.socials} aria-label="Социальные ссылки">
       {socialLinks.map((social) => (
-        <a
+        <ExternalLink
           aria-disabled={!social.enabled}
           aria-label={social.ariaLabel}
           className={!social.enabled ? styles.disabled : undefined}
@@ -138,7 +172,7 @@ function SocialIcons() {
           title={social.ariaLabel}
         >
           <img alt="" aria-hidden="true" src={social.icon} />
-        </a>
+        </ExternalLink>
       ))}
     </div>
   );

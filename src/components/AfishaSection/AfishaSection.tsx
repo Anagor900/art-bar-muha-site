@@ -3,12 +3,15 @@
 /* eslint-disable @next/next/no-img-element */
 
 import { useEffect, useState } from "react";
+import { ExternalLink } from "@/components/ExternalLink/ExternalLink";
 import { SectionTitle } from "@/components/SectionTitle/SectionTitle";
+import { ZoomableImageViewer } from "@/components/ZoomableImageViewer/ZoomableImageViewer";
 import afisha from "../../../content/afisha.json";
 import styles from "./AfishaSection.module.css";
 
 export function AfishaSection() {
-  const [imageReady, setImageReady] = useState(false);
+  const [imageState, setImageState] = useState<"loading" | "loaded" | "error">("loading");
+  const [viewerOpen, setViewerOpen] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -16,14 +19,15 @@ export function AfishaSection() {
 
     image.onload = () => {
       if (active) {
-        setImageReady(true);
+        setImageState("loaded");
       }
     };
     image.onerror = () => {
       if (active) {
-        setImageReady(false);
+        setImageState("error");
       }
     };
+    setImageState("loading");
     image.src = afisha.image;
 
     return () => {
@@ -41,15 +45,24 @@ export function AfishaSection() {
             title={afisha.title}
             description={afisha.vkText}
           />
-          <a className={styles.vkLink} href={afisha.vkHref}>
+          <ExternalLink className={styles.vkLink} href={afisha.vkHref}>
             Подробная афиша ВКонтакте
-          </a>
+          </ExternalLink>
         </div>
         <div className={styles.posterWrap}>
-          {imageReady ? (
-            <a className={styles.poster} href={afisha.image} target="_blank" rel="noreferrer">
+          {imageState === "loaded" ? (
+            <button
+              aria-label="Открыть афишу на весь экран"
+              className={styles.poster}
+              onClick={() => setViewerOpen(true)}
+              type="button"
+            >
               <img alt={afisha.title} src={afisha.image} />
-            </a>
+            </button>
+          ) : imageState === "loading" ? (
+            <div className={styles.poster} aria-label="Загрузка афиши" role="status">
+              <PosterLoader />
+            </div>
           ) : (
             <div className={styles.poster} aria-label={afisha.title}>
               <PosterPlaceholder />
@@ -57,7 +70,27 @@ export function AfishaSection() {
           )}
         </div>
       </div>
+
+      {viewerOpen ? (
+        <ZoomableImageViewer
+          alt={afisha.title}
+          eyebrow="Афиша"
+          onClose={() => setViewerOpen(false)}
+          showDownload={false}
+          src={afisha.image}
+          subtitle="Арт-Ресто-Бар МУХА"
+          title={afisha.title}
+        />
+      ) : null}
     </section>
+  );
+}
+
+function PosterLoader() {
+  return (
+    <span className={styles.loader} aria-hidden="true">
+      <i />
+    </span>
   );
 }
 
